@@ -57,6 +57,14 @@
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_sample"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Show sample values (test)"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
         <TextView
             android:id="@+id/tv_banner_hint"
             android:layout_width="match_parent"

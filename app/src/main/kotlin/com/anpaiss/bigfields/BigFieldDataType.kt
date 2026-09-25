@@ -66,6 +66,8 @@ class BigFieldDataType(
             ViewConfig.Alignment.RIGHT -> Align.RIGHT
         }
         val prefs = Prefs(context)
+        val viewKey = "$dataTypeId#${System.nanoTime()}"
+        var loggedSize = false
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope.launch {
             emitter.onNext(UpdateGraphicConfig(showHeader = false))
@@ -83,14 +85,35 @@ class BigFieldDataType(
                     look.copy(bannerRoom = look.bannerRoom && nav)
                 }
                 combine(values(), zones(), look, hub.units, ticks()) { raw, zone, look, units, now ->
-                    FieldFrames.frame(metric, raw, zone, look, units, align, now)
+                    val shown = raw ?: if (look.sampleValues) metric.sample else null
+                    FieldFrames.frame(metric, shown, zone ?: if (look.sampleValues) 3 else null, look, units, align, now)
                 }.whileVisible(hub.visibleDataTypeIds, dataTypeId)
             }
 
-            frames.distinctUntilChanged().collect { emitter.updateView(render(context, it)) }
+            // Altezza delle cifre: la massima per questa cella, poi la più bassa
+            // tra i campi della pagina, così le cifre sono alte uguali ovunque.
+            val dims = cellDims(context.resources)
+            val (cellW, cellH) = config.viewSize
+            val drawings = frames.distinctUntilChanged().map { f ->
+                val (w, h) = CellGeometry.numberArea(cellW, cellH, dims, f.showLabel, f.bannerBand)
+                val own = NumberRenderer.maxDigitHeight(f.template, w, h)
+                if (!config.preview) hub.reportDigitHeight(viewKey, dataTypeId, own)
+                Drawing(f, w, h, own)
+            }
+            val page = if (config.preview) flowOf(emptyList()) else hub.pageDigitHeights()
+            combine(drawings, page) { d, onPage ->
+                d.copy(digitH = CellGeometry.pageDigitHeight(d.digitH, onPage).toInt().toFloat())
+            }.distinctUntilChanged().collect { d ->
+                if (!loggedSize) {
+                    loggedSize = true
+                    FieldLog.shared?.log("VIEW", "${metric.typeId} area numero ${d.w}x${d.h} px, cifre ${d.digitH.toInt()} px")
+                }
+                emitter.updateView(render(context, d))
+            }
         }
         emitter.setCancellable {
             FieldLog.shared?.log("VIEW", "stop ${metric.typeId}")
+            hub.forgetView(viewKey)
             scope.cancel()
         }
     }
@@ -124,15 +147,19 @@ class BigFieldDataType(
             }
         } else flowOf(0L)
 
-    private fun render(context: Context, f: FieldFrame): RemoteViews {
+    /** Un frame con l'area del numero e l'altezza delle cifre con cui disegnarlo. */
+    private data class Drawing(val f: FieldFrame, val w: Int, val h: Int, val digitH: Float)
+
+    private fun render(context: Context, d: Drawing): RemoteViews {
+        val f = d.f
         val views = RemoteViews(context.packageName, layoutFor(f))
         val c = f.colors
         if (c.bgRes != null) views.setInt(R.id.root, "setBackgroundResource", c.bgRes)
         else views.setInt(R.id.root, "setBackgroundColor", c.fill)
         views.setTextColor(R.id.tv_label, c.label)
         views.setTextViewText(R.id.tv_label, f.label)
-        views.setTextColor(R.id.tv_value, c.value)
-        views.setTextViewText(R.id.tv_value, f.number.toCharSequence())
+        views.setImageViewBitmap(R.id.iv_value, NumberRenderer.render(f.text, f.align, d.w, d.h, d.digitH))
+        views.setInt(R.id.iv_value, "setColorFilter", c.value)
         return views
     }
 }

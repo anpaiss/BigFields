@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Come view_big_field.xml, con la fascia in fondo per il banner della navigazione. Stessi id.
-     La fascia ha altezza fissa in pixel (@dimen/banner_band); il resto
-     della cella va a didascalia e numero come nel layout senza fascia. -->
+<!-- Campo grande con didascalia, con la fascia in fondo per il banner della navigazione. Il numero è un'immagine a un canale disegnata da
+     NumberRenderer, colorata con setColorFilter: l'autosize di una TextView
+     riempiva la riga di testo e non le cifre (prima prova 25/09). Tutte le
+     misure sono in pixel (dimens.xml) perché CellGeometry calcola l'area del
+     numero con gli stessi valori. I quattro layout hanno gli stessi id: sul
+     Karoo setViewVisibility e setTextViewTextSize non vengono applicati. -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingStart="6dp"
-    android:paddingEnd="6dp"
-    android:paddingTop="4dp"
-    android:paddingBottom="2dp"
+    android:paddingStart="@dimen/cell_pad_h"
+    android:paddingEnd="@dimen/cell_pad_h"
+    android:paddingTop="@dimen/cell_pad_top"
+    android:paddingBottom="@dimen/cell_pad_bottom"
     android:background="#000000">
 
     <TextView
         android:id="@+id/tv_label"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.2"
+        android:layout_height="@dimen/label_row"
         android:gravity="center"
         android:text="SPEED  KM/H"
         android:textStyle="bold"
         android:textColor="#9E9E9E"
+        android:textSize="@dimen/label_text"
         android:maxLines="1"
-        android:includeFontPadding="false"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="10sp"
-        android:autoSizeMaxTextSize="30sp"
-        android:autoSizeStepGranularity="1sp" />
+        android:ellipsize="end"
+        android:includeFontPadding="false" />
 
-    <TextView
-        android:id="@+id/tv_value"
+    <ImageView
+        android:id="@+id/iv_value"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.8"
-        android:gravity="center"
-        android:text="--"
-        android:textStyle="bold"
-        android:fontFamily="sans-serif-condensed"
-        android:textColor="#FFFFFF"
-        android:maxLines="1"
-        android:includeFontPadding="false"
-        android:autoSizeTextType="uniform"
-        android:autoSizeMinTextSize="16sp"
-        android:autoSizeMaxTextSize="400sp"
-        android:autoSizeStepGranularity="2sp" />
+        android:layout_weight="1"
+        android:scaleType="fitCenter"
+        android:contentDescription="@null" />
 
     <!-- Fascia libera per il banner "next cue" della navigazione -->
     <View

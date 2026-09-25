@@ -12,7 +12,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.update
 
 /**
  * L'estensione: un campo grafico per ogni voce del [Catalog]. Tiene la
@@ -29,6 +32,8 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
     private val _units = MutableStateFlow(Units())
     private val _visible = MutableStateFlow<Set<String>?>(null)
     private val _navigating = MutableStateFlow(false)
+    // Altezza massima delle cifre di ogni vista aperta: chiave della vista -> (dato, px)
+    private val _digitHeights = MutableStateFlow<Map<String, Pair<String, Float>>>(emptyMap())
 
     val units: StateFlow<Units> = _units
 
@@ -93,6 +98,19 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
             connected.value = true
         }
     }
+
+    fun reportDigitHeight(viewKey: String, dataTypeId: String, px: Float) {
+        _digitHeights.update { it + (viewKey to (dataTypeId to px)) }
+    }
+
+    fun forgetView(viewKey: String) {
+        _digitHeights.update { it - viewKey }
+    }
+
+    /** Altezze massime delle cifre dei nostri campi sulla pagina visibile (tutti, se non è nota). */
+    fun pageDigitHeights(): Flow<List<Float>> = combine(_digitHeights, _visible) { m, visible ->
+        m.values.filter { visible == null || it.first in visible }.map { it.second }
+    }.distinctUntilChanged()
 
     /** Stato di un dato del Karoo, come Flow; si iscrive quando la connessione è pronta. */
     fun stream(karooType: String): Flow<StreamState> = callbackFlow {

@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Fascia lasciata al banner "next cue" della navigazione, in pixel veri:
-         il banner ha un'altezza fissa sullo schermo 480x800 del Karoo 3.
-         Stima da BetterEta (~15 % della sua dashboard), da misurare con uno
-         screenshot in navigazione. -->
+    <!-- Misure della cella in pixel veri (Karoo 3: 480x800, density 1.875).
+         CellGeometry le usa per calcolare l'area del numero: devono essere le
+         stesse del layout, per questo sono in px e non in dp. -->
+    <dimen name="cell_pad_h">8px</dimen>
+    <dimen name="cell_pad_top">6px</dimen>
+    <dimen name="cell_pad_bottom">6px</dimen>
+
+    <!-- Didascalia: 22sp = 41 px, maiuscole ~29 px (native misurate 25 px, 25/09) -->
+    <dimen name="label_text">22sp</dimen>
+    <dimen name="label_row">44px</dimen>
+
+    <!-- Fascia lasciata al banner "next cue" della navigazione. Stima da
+         BetterEta, da misurare con uno screenshot in navigazione. -->
     <dimen name="banner_band">100px</dimen>
 </resources>

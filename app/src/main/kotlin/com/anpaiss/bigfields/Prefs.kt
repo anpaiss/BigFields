@@ -32,6 +32,14 @@ class Prefs(ctx: Context) {
         get() = sp.getBoolean(KEY_BANNER_ROOM, true)
         set(v) = sp.edit().putBoolean(KEY_BANNER_ROOM, v).apply()
 
+    /**
+     * Solo per le prove sul Karoo senza registrare: al posto di un dato
+     * assente il campo mostra il valore d'esempio del catalogo.
+     */
+    var sampleValues: Boolean
+        get() = sp.getBoolean(KEY_SAMPLE_VALUES, false)
+        set(v) = sp.edit().putBoolean(KEY_SAMPLE_VALUES, v).apply()
+
     /** Stile, didascalia e fascia come Flow: i campi si ridisegnano appena cambiano nell'app. */
     fun lookFlow(): Flow<Look> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -42,15 +50,21 @@ class Prefs(ctx: Context) {
         awaitClose { sp.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
-    fun look() = Look(style, showLabel, bannerRoom)
+    fun look() = Look(style, showLabel, bannerRoom, sampleValues)
 
-    data class Look(val style: FieldStyle, val showLabel: Boolean, val bannerRoom: Boolean = true)
+    data class Look(
+        val style: FieldStyle,
+        val showLabel: Boolean,
+        val bannerRoom: Boolean = true,
+        val sampleValues: Boolean = false,
+    )
 
     companion object {
         private const val NAME = "big_fields"
         private const val KEY_STYLE = "style"
         private const val KEY_SHOW_LABEL = "show_label"
         private const val KEY_BANNER_ROOM = "banner_room"
-        private val LOOK_KEYS = setOf(KEY_STYLE, KEY_SHOW_LABEL, KEY_BANNER_ROOM)
+        private const val KEY_SAMPLE_VALUES = "sample_values"
+        private val LOOK_KEYS = setOf(KEY_STYLE, KEY_SHOW_LABEL, KEY_BANNER_ROOM, KEY_SAMPLE_VALUES)
     }
 }

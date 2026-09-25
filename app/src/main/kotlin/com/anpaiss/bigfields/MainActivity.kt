@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
@@ -48,6 +49,11 @@ class MainActivity : AppCompatActivity() {
             setOnCheckedChangeListener { _, checked -> prefs.bannerRoom = checked; showPreview() }
         }
 
+        findViewById<SwitchCompat>(R.id.sw_sample).apply {
+            isChecked = prefs.sampleValues
+            setOnCheckedChangeListener { _, checked -> prefs.sampleValues = checked }
+        }
+
         findViewById<TextView>(R.id.tv_fields).text = Catalog.all.joinToString("\n") {
             "• " + getString(resources.getIdentifier("f_${it.typeId.replace('-', '_')}_name", "string", packageName))
         }
@@ -71,10 +77,17 @@ class MainActivity : AppCompatActivity() {
 
         val page = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
         val column = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        for ((typeId, zone) in listOf("speed" to null, "hr" to 3)) {
-            val metric = Catalog.byTypeId(typeId) ?: continue
-            val f = FieldFrames.frame(metric, metric.sample, zone, look, Units(), Align.RIGHT, System.currentTimeMillis())
-            column.addView(cell(f), LinearLayout.LayoutParams(CELL_W_PX, CELL_H_PX).apply { bottomMargin = GAP_PX })
+        val dims = cellDims(resources)
+        val frames = listOf("speed" to null, "hr" to 3).mapNotNull { (typeId, zone) ->
+            Catalog.byTypeId(typeId)?.let {
+                FieldFrames.frame(it, it.sample, zone, look, Units(), Align.CENTER, System.currentTimeMillis())
+            }
+        }
+        // Come sul Karoo: cifre alte uguali in tutta la pagina
+        val areas = frames.map { CellGeometry.numberArea(CELL_W_PX, CELL_H_PX, dims, it.showLabel, it.bannerBand) }
+        val digitH = frames.zip(areas).minOf { (f, a) -> NumberRenderer.maxDigitHeight(f.template, a.first, a.second) }
+        for ((f, a) in frames.zip(areas)) {
+            column.addView(cell(f, a, digitH), LinearLayout.LayoutParams(CELL_W_PX, CELL_H_PX).apply { bottomMargin = GAP_PX })
         }
         page.addView(column)
         page.addView(banner(), FrameLayout.LayoutParams(PAGE_W_PX, resources.getDimensionPixelSize(R.dimen.banner_band),
@@ -91,14 +104,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun cell(f: FieldFrame): View {
+    private fun cell(f: FieldFrame, area: Pair<Int, Int>, digitH: Float): View {
         val v = LayoutInflater.from(this).inflate(layoutFor(f), null, false)
         val root = v.findViewById<View>(R.id.root)
         if (f.colors.bgRes != null) root.setBackgroundResource(f.colors.bgRes) else root.setBackgroundColor(f.colors.fill)
         v.findViewById<TextView>(R.id.tv_label).apply { text = f.label; setTextColor(f.colors.label) }
-        v.findViewById<TextView>(R.id.tv_value).apply {
-            setTextColor(f.colors.value)
-            text = f.number.toCharSequence()
+        v.findViewById<ImageView>(R.id.iv_value).apply {
+            setImageBitmap(NumberRenderer.render(f.text, f.align, area.first, area.second, digitH))
+            setColorFilter(f.colors.value)
         }
         return v
     }
@@ -118,13 +131,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        // Pagina di corsa del Karoo 3 in pixel: schermo 480x800 meno la barra di
-        // stato. Celle stimate (478 px di larghezza dal log di BetterEta);
-        // da allineare alle misure della prima prova.
+        // Pagina di corsa del Karoo 3 misurata alla prima prova (25/09): una
+        // cella a pagina intera è 478x642 px; qui divisa in due.
         private const val PAGE_W_PX = 480
         private const val CELL_W_PX = 478
-        private const val CELL_H_PX = 376
-        private const val GAP_PX = 2
+        private const val CELL_H_PX = 318
+        private const val GAP_PX = 3
         private const val PAGE_H_PX = 2 * (CELL_H_PX + GAP_PX)
     }
 }

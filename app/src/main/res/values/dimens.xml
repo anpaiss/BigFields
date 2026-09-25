@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Fascia lasciata al banner "next cue" della navigazione, in pixel veri:
+         il banner ha un'altezza fissa sullo schermo 480x800 del Karoo 3.
+         Stima da BetterEta (~15 % della sua dashboard), da misurare con uno
+         screenshot in navigazione. -->
+    <dimen name="banner_band">100px</dimen>
+</resources>

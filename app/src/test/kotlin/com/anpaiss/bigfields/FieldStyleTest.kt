@@ -57,4 +57,25 @@ class FieldStyleTest {
         assertEquals("RIDE TIME",
             FieldFrames.frame(Catalog.byTypeId("ride-time")!!, 8.0, null, look, Units(), Align.RIGHT, 0L, utc).label)
     }
+
+    @Test fun `the banner band follows the option and is the same for every field`() {
+        val utc = TimeZone.getTimeZone("UTC")
+        for (room in listOf(true, false)) {
+            val look = Prefs.Look(FieldStyle.KAROO_DARK, true, bannerRoom = room)
+            for (m in Catalog.all) {
+                assertEquals(m.typeId, room,
+                    FieldFrames.frame(m, m.sample, null, look, Units(), Align.RIGHT, 0L, utc).bannerBand)
+            }
+        }
+    }
+
+    @Test fun `four layouts for label and band`() {
+        val utc = TimeZone.getTimeZone("UTC")
+        val speed = Catalog.byTypeId("speed")!!
+        val layouts = listOf(true, false).flatMap { label -> listOf(true, false).map { band ->
+            layoutFor(FieldFrames.frame(speed, 8.0, null, Prefs.Look(FieldStyle.VIVID, label, band),
+                Units(), Align.RIGHT, 0L, utc))
+        } }
+        assertEquals(4, layouts.toSet().size)
+    }
 }

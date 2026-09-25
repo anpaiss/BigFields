@@ -49,11 +49,27 @@
             android:textColor="#FFFFFF"
             android:textSize="15sp" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_banner"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Leave room for the navigation banner"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_banner_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#AAAAAA"
+            android:textSize="13sp"
+            android:lineSpacingMultiplier="1.2" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="PREVIEW (HALF PAGE, HEART RATE IN ZONE 3)"
+            android:text="PREVIEW: TWO-FIELD PAGE WHILE NAVIGATING"
             android:textColor="#888888"
             android:textSize="11sp"
             android:letterSpacing="0.1" />
@@ -61,8 +77,10 @@
         <FrameLayout
             android:id="@+id/preview"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginTop="6dp" />
+            android:layout_height="360dp"
+            android:layout_marginTop="6dp"
+            android:background="#222222"
+            android:clipChildren="true" />
 
         <TextView
             android:layout_width="wrap_content"

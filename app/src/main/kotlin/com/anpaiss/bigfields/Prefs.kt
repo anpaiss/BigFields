@@ -21,21 +21,36 @@ class Prefs(ctx: Context) {
         get() = sp.getBoolean(KEY_SHOW_LABEL, true)
         set(v) = sp.edit().putBoolean(KEY_SHOW_LABEL, v).apply()
 
-    /** Stile e didascalia come Flow: i campi si ridisegnano appena cambiano nell'app. */
+    /**
+     * Fascia libera in fondo a OGNI campo mentre si naviga, alta quanto il
+     * banner "next cue" che la navigazione disegna in fondo allo schermo. In tutti i campi e non solo
+     * in quello in basso, perché i numeri della pagina restino della stessa
+     * grandezza (richiesta di Andrea 25/09). Accesa di default: un numero
+     * coperto è peggio di un numero un po' più piccolo.
+     */
+    var bannerRoom: Boolean
+        get() = sp.getBoolean(KEY_BANNER_ROOM, true)
+        set(v) = sp.edit().putBoolean(KEY_BANNER_ROOM, v).apply()
+
+    /** Stile, didascalia e fascia come Flow: i campi si ridisegnano appena cambiano nell'app. */
     fun lookFlow(): Flow<Look> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == KEY_STYLE || key == KEY_SHOW_LABEL) trySend(Look(style, showLabel))
+            if (key in LOOK_KEYS) trySend(look())
         }
         sp.registerOnSharedPreferenceChangeListener(listener)
-        send(Look(style, showLabel))
+        send(look())
         awaitClose { sp.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
-    data class Look(val style: FieldStyle, val showLabel: Boolean)
+    fun look() = Look(style, showLabel, bannerRoom)
+
+    data class Look(val style: FieldStyle, val showLabel: Boolean, val bannerRoom: Boolean = true)
 
     companion object {
         private const val NAME = "big_fields"
         private const val KEY_STYLE = "style"
         private const val KEY_SHOW_LABEL = "show_label"
+        private const val KEY_BANNER_ROOM = "banner_room"
+        private val LOOK_KEYS = setOf(KEY_STYLE, KEY_SHOW_LABEL, KEY_BANNER_ROOM)
     }
 }

@@ -3,6 +3,7 @@ package com.anpaiss.bigfields
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.KarooExtension
 import io.hammerhead.karooext.models.ActiveRidePage
+import io.hammerhead.karooext.models.OnNavigationState
 import io.hammerhead.karooext.models.OnStreamState
 import io.hammerhead.karooext.models.StreamState
 import io.hammerhead.karooext.models.UserProfile
@@ -27,12 +28,18 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
     private val connected = MutableStateFlow(false)
     private val _units = MutableStateFlow(Units())
     private val _visible = MutableStateFlow<Set<String>?>(null)
+    private val _navigating = MutableStateFlow(false)
 
     val units: StateFlow<Units> = _units
 
     // Id completi dei dati sulla pagina che l'utente sta guardando.
     // null = non ancora noto: tutti i campi disegnano (vedi whileVisible).
     val visibleDataTypeIds: StateFlow<Set<String>?> = _visible
+
+    // Navigazione attiva (route o destinazione). L'SDK non dice quando il Karoo
+    // mostra il banner "next cue" in fondo alla pagina; il banner esiste solo
+    // in navigazione, quindi la fascia per il banner vale solo qui.
+    val navigating: StateFlow<Boolean> = _navigating
 
     override val types by lazy { Catalog.all.map { BigFieldDataType(extension, it, this) } }
 
@@ -60,6 +67,14 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
                 )
                 if (next != _units.value) log.log("SYS", "Unità: $next")
                 _units.value = next
+            }
+
+            consumerIds += karooSystem.addConsumer(
+                OnNavigationState.Params, { _ -> }, {}
+            ) { event: OnNavigationState ->
+                val nav = event.state !is OnNavigationState.NavigationState.Idle
+                if (nav != _navigating.value) log.log("NAV", "Navigazione ${if (nav) "attiva" else "ferma"}: ${event.state::class.simpleName}")
+                _navigating.value = nav
             }
 
             // Anche la misura della prima prova: com'è fatta ogni pagina (griglia 60 = altezza intera)

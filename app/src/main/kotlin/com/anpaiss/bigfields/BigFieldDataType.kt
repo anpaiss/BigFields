@@ -72,11 +72,17 @@ class BigFieldDataType(
 
             val frames: Flow<FieldFrame> = if (config.preview) {
                 // Editor profili: un valore d'esempio, zona 3 per vedere i colori
+                // Niente fascia: la cella d'anteprima è piccola e il banner lì non c'è.
                 combine(prefs.lookFlow(), hub.units) { look, units ->
-                    FieldFrames.frame(metric, metric.sample, 3, look, units, align, System.currentTimeMillis())
+                    FieldFrames.frame(metric, metric.sample, 3, look.copy(bannerRoom = false), units, align,
+                        System.currentTimeMillis())
                 }
             } else {
-                combine(values(), zones(), prefs.lookFlow(), hub.units, ticks()) { raw, zone, look, units, now ->
+                // Fascia per il banner solo mentre si naviga: fuori navigazione il banner non c'è
+                val look = combine(prefs.lookFlow(), hub.navigating) { look, nav ->
+                    look.copy(bannerRoom = look.bannerRoom && nav)
+                }
+                combine(values(), zones(), look, hub.units, ticks()) { raw, zone, look, units, now ->
                     FieldFrames.frame(metric, raw, zone, look, units, align, now)
                 }.whileVisible(hub.visibleDataTypeIds, dataTypeId)
             }
@@ -119,8 +125,7 @@ class BigFieldDataType(
         } else flowOf(0L)
 
     private fun render(context: Context, f: FieldFrame): RemoteViews {
-        val layout = if (f.showLabel) R.layout.view_big_field else R.layout.view_big_field_bare
-        val views = RemoteViews(context.packageName, layout)
+        val views = RemoteViews(context.packageName, layoutFor(f))
         val c = f.colors
         if (c.bgRes != null) views.setInt(R.id.root, "setBackgroundResource", c.bgRes)
         else views.setInt(R.id.root, "setBackgroundColor", c.fill)

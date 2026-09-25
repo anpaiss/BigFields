@@ -1,18 +1,22 @@
 package com.anpaiss.bigfields
 
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
+import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 
-/** Impostazioni: stile, didascalia sì/no, anteprima e elenco dei campi. */
+/** Impostazioni: stile, didascalia, fascia per il banner, anteprima e elenco dei campi. */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var prefs: Prefs
@@ -35,11 +39,13 @@ class MainActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        val sw = findViewById<SwitchCompat>(R.id.sw_label)
-        sw.isChecked = prefs.showLabel
-        sw.setOnCheckedChangeListener { _, checked ->
-            prefs.showLabel = checked
-            showPreview()
+        findViewById<SwitchCompat>(R.id.sw_label).apply {
+            isChecked = prefs.showLabel
+            setOnCheckedChangeListener { _, checked -> prefs.showLabel = checked; showPreview() }
+        }
+        findViewById<SwitchCompat>(R.id.sw_banner).apply {
+            isChecked = prefs.bannerRoom
+            setOnCheckedChangeListener { _, checked -> prefs.bannerRoom = checked; showPreview() }
         }
 
         findViewById<TextView>(R.id.tv_fields).text = Catalog.all.joinToString("\n") {
@@ -48,15 +54,45 @@ class MainActivity : AppCompatActivity() {
         showPreview()
     }
 
-    /** Stesso layout e stessi colori del campo sul Karoo, con un valore d'esempio. */
+    /**
+     * Una pagina a due campi in pixel veri (velocità sopra, frequenza cardiaca
+     * in zona 3 sotto), con sopra il banner di navigazione simulato, poi
+     * rimpicciolita per stare nel riquadro. Stessi layout e colori del Karoo.
+     */
     private fun showPreview() {
-        val metric = Catalog.byTypeId("hr") ?: return
-        val look = Prefs.Look(prefs.style, prefs.showLabel)
-        val f = FieldFrames.frame(metric, metric.sample, 3, look, Units(), Align.RIGHT, System.currentTimeMillis())
+        val look = prefs.look()
+        findViewById<TextView>(R.id.tv_banner_hint).text =
+            if (look.bannerRoom) "On: while navigating, every field keeps its bottom band free. The banner never covers a number, " +
+                "and all numbers stay the same size, a little smaller. Without navigation the numbers fill the cell."
+            else "Off: the numbers are larger. While navigating, the banner covers the bottom of the lower field."
+
         val host = findViewById<FrameLayout>(R.id.preview)
         host.removeAllViews()
-        val layout = if (f.showLabel) R.layout.view_big_field else R.layout.view_big_field_bare
-        val v = LayoutInflater.from(this).inflate(layout, host, false)
+
+        val page = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
+        val column = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        for ((typeId, zone) in listOf("speed" to null, "hr" to 3)) {
+            val metric = Catalog.byTypeId(typeId) ?: continue
+            val f = FieldFrames.frame(metric, metric.sample, zone, look, Units(), Align.RIGHT, System.currentTimeMillis())
+            column.addView(cell(f), LinearLayout.LayoutParams(CELL_W_PX, CELL_H_PX).apply { bottomMargin = GAP_PX })
+        }
+        page.addView(column)
+        page.addView(banner(), FrameLayout.LayoutParams(PAGE_W_PX, resources.getDimensionPixelSize(R.dimen.banner_band),
+            Gravity.BOTTOM))
+        host.addView(page, FrameLayout.LayoutParams(PAGE_W_PX, PAGE_H_PX))
+
+        host.post {
+            val scale = host.height.toFloat() / PAGE_H_PX
+            page.pivotX = 0f
+            page.pivotY = 0f
+            page.scaleX = scale
+            page.scaleY = scale
+            page.translationX = (host.width - PAGE_W_PX * scale) / 2f
+        }
+    }
+
+    private fun cell(f: FieldFrame): View {
+        val v = LayoutInflater.from(this).inflate(layoutFor(f), null, false)
         val root = v.findViewById<View>(R.id.root)
         if (f.colors.bgRes != null) root.setBackgroundResource(f.colors.bgRes) else root.setBackgroundColor(f.colors.fill)
         v.findViewById<TextView>(R.id.tv_label).apply { text = f.label; setTextColor(f.colors.label) }
@@ -64,6 +100,31 @@ class MainActivity : AppCompatActivity() {
             setTextColor(f.colors.value)
             text = f.number.toCharSequence()
         }
-        host.addView(v)
+        return v
+    }
+
+    /** Il banner "next cue" del Karoo, disegnato alla buona: serve a vedere cosa copre. */
+    private fun banner(): View = TextView(this).apply {
+        text = "↰  Turn left  ·  200 m"
+        setTextColor(Color.WHITE)
+        textSize = 20f
+        gravity = Gravity.CENTER
+        alpha = 0.92f
+        background = GradientDrawable().apply {
+            setColor(0xFF2E7D32.toInt())
+            cornerRadius = 18f
+        }
+        layoutParams = ViewGroup.LayoutParams(PAGE_W_PX, ViewGroup.LayoutParams.MATCH_PARENT)
+    }
+
+    companion object {
+        // Pagina di corsa del Karoo 3 in pixel: schermo 480x800 meno la barra di
+        // stato. Celle stimate (478 px di larghezza dal log di BetterEta);
+        // da allineare alle misure della prima prova.
+        private const val PAGE_W_PX = 480
+        private const val CELL_W_PX = 478
+        private const val CELL_H_PX = 376
+        private const val GAP_PX = 2
+        private const val PAGE_H_PX = 2 * (CELL_H_PX + GAP_PX)
     }
 }

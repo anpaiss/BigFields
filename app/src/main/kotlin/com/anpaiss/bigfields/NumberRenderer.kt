@@ -29,7 +29,14 @@ object NumberRenderer {
         }.height().toFloat()
     }
 
-    private val karoo by lazy { Face(Typeface.create("sans-serif", Typeface.BOLD)) }
+    // Peso 700 esplicito: Typeface.create("sans-serif", BOLD) sul Karoo dava il
+    // Plex normale, cifre sottili (25/09). Il peso esiste da Android 9 (Karoo 3 = 12).
+    private val karoo by lazy {
+        Face(
+            if (android.os.Build.VERSION.SDK_INT >= 28) Typeface.create(Typeface.SANS_SERIF, 700, false)
+            else Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
+        )
+    }
     @Volatile private var condensed: Face? = null
 
     /** Carica i caratteri inclusi nell'app; da chiamare prima di disegnare. */

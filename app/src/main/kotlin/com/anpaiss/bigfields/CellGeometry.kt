@@ -10,6 +10,7 @@ data class CellDims(
     val padBottom: Int,
     val labelRow: Int,
     val band: Int,
+    val rowGap: Int = 0,
 )
 
 /**
@@ -32,6 +33,17 @@ object CellGeometry {
         val w = cellW - 2 * d.padH
         val h = cellH - d.padTop - d.padBottom - (if (showLabel) d.labelRow else 0) - (if (band) d.band else 0)
         return max(w, 1) to max(h, 1)
+    }
+
+    /**
+     * Area del numero in ogni riga di un campo pagina: [rows] righe di altezza
+     * uguale separate da [CellDims.rowGap], la fascia per il banner una volta
+     * sola in fondo alla cella.
+     */
+    fun pageRowArea(cellW: Int, cellH: Int, d: CellDims, rows: Int, showLabel: Boolean, band: Boolean): Pair<Int, Int> {
+        val n = max(rows, 1)
+        val usable = cellH - (if (band) d.band else 0) - (n - 1) * d.rowGap
+        return numberArea(cellW, usable / n, d, showLabel, band = false)
     }
 
     /**

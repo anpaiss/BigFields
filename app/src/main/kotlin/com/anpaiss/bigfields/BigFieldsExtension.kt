@@ -46,12 +46,16 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
     // in navigazione, quindi la fascia per il banner vale solo qui.
     val navigating: StateFlow<Boolean> = _navigating
 
-    override val types by lazy { Catalog.all.map { BigFieldDataType(extension, it, this) } }
+    override val types by lazy {
+        (1..Pages.COUNT).map { BigPageDataType(extension, it, this) } +
+            Catalog.all.map { BigFieldDataType(extension, it, this) }
+    }
 
     override fun onCreate() {
         super.onCreate()
         log = FieldLog(applicationContext)
         FieldLog.shared = log
+        NumberRenderer.init(applicationContext)
         val dm = resources.displayMetrics
         log.log("SYS", "=== BigFields avviato: schermo ${dm.widthPixels}x${dm.heightPixels} px, " +
             "density ${dm.density}, fontScale ${resources.configuration.fontScale}, campi ${Catalog.all.size}")

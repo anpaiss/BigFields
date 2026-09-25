@@ -33,4 +33,13 @@ class CellGeometryTest {
         assertEquals(90f, CellGeometry.pageDigitHeight(90f, listOf(180f, 120f)), 0f)
         assertEquals(150f, CellGeometry.pageDigitHeight(150f, emptyList()), 0f)
     }
+
+    @Test fun `page rows share the height equally, band once at the bottom`() {
+        val d = dims.copy(rowGap = 4)
+        // 642 - 4 di separatore = 638, due righe da 319; numero = 319 - 12 - 44
+        assertEquals(462 to 263, CellGeometry.pageRowArea(478, 642, d, rows = 2, showLabel = true, band = false))
+        // con la fascia: 642 - 100 - 4 = 538, righe da 269
+        assertEquals(462 to 213, CellGeometry.pageRowArea(478, 642, d, rows = 2, showLabel = true, band = true))
+        assertEquals(462 to 630, CellGeometry.pageRowArea(478, 642, d, rows = 1, showLabel = false, band = false))
+    }
 }

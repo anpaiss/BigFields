@@ -3,6 +3,12 @@
     <string name="app_name">BigFields</string>
     <string name="extension_name">BigFields</string>
 
+    <string name="page_1_name">Big Page 1</string>
+    <string name="page_2_name">Big Page 2</string>
+    <string name="page_3_name">Big Page 3</string>
+    <string name="page_4_name">Big Page 4</string>
+    <string name="page_desc">A whole page of up to four data in equal rows, chosen in the BigFields app</string>
+
     <string name="f_speed_name">Big Speed</string>
     <string name="f_speed_desc">Current speed, in large digits</string>
     <string name="f_speed_3s_name">Big Speed 3s</string>

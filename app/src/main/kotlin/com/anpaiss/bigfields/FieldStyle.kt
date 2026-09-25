@@ -1,6 +1,23 @@
 package com.anpaiss.bigfields
 
 /**
+ * Carattere dei numeri. Il numero è disegnato da noi come immagine, quindi può
+ * usare un carattere incluso nell'app. Prima prova 25/09: in una riga di
+ * mezza pagina il limite è la larghezza, e le cifre del carattere del Karoo
+ * (IBM Plex; "sans-serif-condensed" è solo un alias del normale) sono larghe
+ * quasi quanto alte. Barlow Condensed (licenza OFL) dà cifre ~36 % più alte.
+ */
+enum class NumberFont(val label: String) {
+    CONDENSED("Condensed (Barlow)"),
+    KAROO("Karoo"),
+    ;
+
+    companion object {
+        val DEFAULT = CONDENSED
+    }
+}
+
+/**
  * Colori risolti per un campo. [fill] è il colore di fondo effettivo (serve al
  * controllo del contrasto); [bgRes] è il drawable con il bordo, quando c'è.
  */
@@ -27,6 +44,9 @@ enum class FieldStyle(val label: String) {
     PASTEL("Pastel"),
     INK("Ink"),
     ;
+
+    /** Colore delle linee tra le righe di un campo pagina: scuro, tranne sul fondo chiaro. */
+    val separator: Int get() = if (this == KAROO_LIGHT) 0xFF9E9E9E.toInt() else BLACK
 
     /** [zone] 1..5 oppure null (campo senza zona o zona non ancora nota). */
     fun colorsFor(zone: Int?): FieldColors {

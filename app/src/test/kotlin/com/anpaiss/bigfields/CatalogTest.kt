@@ -19,7 +19,8 @@ class CatalogTest {
 
     @Test fun `every catalog entry is declared to the Karoo and vice versa`() {
         val declared = Regex("""typeId="([^"]+)"""").findAll(info).map { it.groupValues[1] }.toList()
-        assertEquals(Catalog.all.map { it.typeId }, declared)
+        val pages = (1..Pages.COUNT).map { Pages.typeId(it) }
+        assertEquals(pages + Catalog.all.map { it.typeId }, declared)
     }
 
     @Test fun `every declared field has a name and a description`() {
@@ -28,6 +29,20 @@ class CatalogTest {
             assertTrue("name of ${m.typeId}", strings.contains("name=\"f_${key}_name\""))
             assertTrue("description of ${m.typeId}", strings.contains("name=\"f_${key}_desc\""))
         }
+    }
+
+    @Test fun `page defaults are valid catalog rows`() {
+        for (page in 1..Pages.COUNT) {
+            val rows = Pages.defaults[page - 1]
+            assertEquals(rows, Pages.sanitize(page, rows))
+            assertTrue(rows.size in 1..Pages.MAX_ROWS)
+        }
+    }
+
+    @Test fun `page rows drop unknown data, cap at four and fall back to the default`() {
+        assertEquals(listOf("speed", "hr"), Pages.sanitize(1, listOf("speed", "nope", "hr")))
+        assertEquals(4, Pages.sanitize(1, Catalog.all.map { it.typeId }).size)
+        assertEquals(Pages.defaults[1], Pages.sanitize(2, emptyList()))
     }
 
     @Test fun `every entry except the clock reads a Karoo data type`() {

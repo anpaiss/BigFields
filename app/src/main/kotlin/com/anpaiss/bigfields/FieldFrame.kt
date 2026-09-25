@@ -21,6 +21,7 @@ data class FieldFrame(
     val colors: FieldColors,
     val showLabel: Boolean,
     val bannerBand: Boolean = false,
+    val font: NumberFont = NumberFont.DEFAULT,
 )
 
 object FieldFrames {
@@ -39,7 +40,7 @@ object FieldFrames {
         val f = ValueFormatter.format(metric, raw, units, nowMs, tz)
         val label = listOf(metric.label, f.unit).filter { it.isNotEmpty() }.joinToString("  ")
         val colors = look.style.colorsFor(if (metric.zone != null && raw != null) zone else null)
-        return FieldFrame(label, f.text, f.template, align, colors, look.showLabel, look.bannerRoom)
+        return FieldFrame(label, f.text, f.template, align, colors, look.showLabel, look.bannerRoom, look.font)
     }
 }
 
@@ -57,4 +58,5 @@ fun cellDims(res: Resources) = CellDims(
     padBottom = res.getDimensionPixelSize(R.dimen.cell_pad_bottom),
     labelRow = res.getDimensionPixelSize(R.dimen.label_row),
     band = res.getDimensionPixelSize(R.dimen.banner_band),
+    rowGap = res.getDimensionPixelSize(R.dimen.row_gap),
 )

@@ -6,6 +6,36 @@
     id="big-fields"
     scansDevices="false">
 
+    <!-- Campi pagina: da 1 a 4 dati in righe uguali, scelti nell'app -->
+    <DataType
+        typeId="page-1"
+        displayName="@string/page_1_name"
+        description="@string/page_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="page-2"
+        displayName="@string/page_2_name"
+        description="@string/page_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="page-3"
+        displayName="@string/page_3_name"
+        description="@string/page_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="page-4"
+        displayName="@string/page_4_name"
+        description="@string/page_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <!-- Campi singoli -->
     <DataType
         typeId="speed"
         displayName="@string/f_speed_name"

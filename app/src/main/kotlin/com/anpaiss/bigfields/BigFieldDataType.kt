@@ -13,14 +13,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 /**
@@ -60,11 +56,7 @@ class BigFieldDataType(
         FieldLog.shared?.log("VIEW", "startView ${metric.typeId} size=${config.viewSize} " +
             "grid=${config.gridSize} nativeTextSize=${config.textSize}sp align=${config.alignment} " +
             "preview=${config.preview}")
-        val align = when (config.alignment) {
-            ViewConfig.Alignment.LEFT -> Align.LEFT
-            ViewConfig.Alignment.CENTER -> Align.CENTER
-            ViewConfig.Alignment.RIGHT -> Align.RIGHT
-        }
+        val align = config.align()
         val prefs = Prefs(context)
         val viewKey = "$dataTypeId#${System.nanoTime()}"
         var loggedSize = false
@@ -72,22 +64,11 @@ class BigFieldDataType(
         scope.launch {
             emitter.onNext(UpdateGraphicConfig(showHeader = false))
 
-            val frames: Flow<FieldFrame> = if (config.preview) {
-                // Editor profili: un valore d'esempio, zona 3 per vedere i colori
-                // Niente fascia: la cella d'anteprima è piccola e il banner lì non c'è.
-                combine(prefs.lookFlow(), hub.units) { look, units ->
-                    FieldFrames.frame(metric, metric.sample, 3, look.copy(bannerRoom = false), units, align,
-                        System.currentTimeMillis())
-                }
+            // Anteprima nell'editor: niente fascia, la cella è piccola e il banner lì non c'è
+            val frames = if (config.preview) {
+                previewFrames(metric, prefs.lookFlow().map { it.copy(bannerRoom = false) }, hub, align)
             } else {
-                // Fascia per il banner solo mentre si naviga: fuori navigazione il banner non c'è
-                val look = combine(prefs.lookFlow(), hub.navigating) { look, nav ->
-                    look.copy(bannerRoom = look.bannerRoom && nav)
-                }
-                combine(values(), zones(), look, hub.units, ticks()) { raw, zone, look, units, now ->
-                    val shown = raw ?: if (look.sampleValues) metric.sample else null
-                    FieldFrames.frame(metric, shown, zone ?: if (look.sampleValues) 3 else null, look, units, align, now)
-                }.whileVisible(hub.visibleDataTypeIds, dataTypeId)
+                liveFrames(metric, rideLook(prefs, hub), hub, align).whileVisible(hub.visibleDataTypeIds, dataTypeId)
             }
 
             // Altezza delle cifre: la massima per questa cella, poi la più bassa
@@ -96,7 +77,7 @@ class BigFieldDataType(
             val (cellW, cellH) = config.viewSize
             val drawings = frames.distinctUntilChanged().map { f ->
                 val (w, h) = CellGeometry.numberArea(cellW, cellH, dims, f.showLabel, f.bannerBand)
-                val own = NumberRenderer.maxDigitHeight(f.template, w, h)
+                val own = NumberRenderer.maxDigitHeight(f.template, w, h, f.font)
                 if (!config.preview) hub.reportDigitHeight(viewKey, dataTypeId, own)
                 Drawing(f, w, h, own)
             }
@@ -118,35 +99,6 @@ class BigFieldDataType(
         }
     }
 
-    /** Valore grezzo del dato; null quando manca. Registra nel log il primo valore ricevuto. */
-    private fun values(): Flow<Double?> {
-        val type = metric.karooType ?: return flowOf(0.0)
-        var logged = false
-        return hub.stream(type).onEach { state ->
-            if (!logged) {
-                logged = true
-                FieldLog.shared?.log("DATA", "${metric.typeId} <- $type primo stato: " +
-                    if (state is StreamState.Streaming) "valori=${state.dataPoint.values}" else state.toString())
-            }
-        }.map { (it as? StreamState.Streaming)?.dataPoint?.singleValue }
-    }
-
-    private fun zones(): Flow<Int?> {
-        val zone = metric.zone ?: return flowOf(null)
-        return hub.stream(zone.karooType).map {
-            (it as? StreamState.Streaming)?.dataPoint?.singleValue?.toInt()
-        }
-    }
-
-    /** Orologio a 1 s solo per i campi che cambiano col tempo; gli altri un istante fisso. */
-    private fun ticks(): Flow<Long> =
-        if (metric.kind == Kind.CLOCK || metric.kind == Kind.ARRIVAL) flow {
-            while (true) {
-                emit(System.currentTimeMillis())
-                delay(1_000L)
-            }
-        } else flowOf(0L)
-
     /** Un frame con l'area del numero e l'altezza delle cifre con cui disegnarlo. */
     private data class Drawing(val f: FieldFrame, val w: Int, val h: Int, val digitH: Float)
 
@@ -158,9 +110,8 @@ class BigFieldDataType(
         else views.setInt(R.id.root, "setBackgroundColor", c.fill)
         views.setTextColor(R.id.tv_label, c.label)
         views.setTextViewText(R.id.tv_label, f.label)
-        views.setImageViewBitmap(R.id.iv_value, NumberRenderer.render(f.text, f.align, d.w, d.h, d.digitH))
+        views.setImageViewBitmap(R.id.iv_value, NumberRenderer.render(f.text, f.align, d.w, d.h, d.digitH, f.font))
         views.setInt(R.id.iv_value, "setColorFilter", c.value)
         return views
     }
 }
-

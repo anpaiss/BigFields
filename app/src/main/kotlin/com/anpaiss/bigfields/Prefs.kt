@@ -17,6 +17,12 @@ class Prefs(ctx: Context) {
             ?: FieldStyle.DEFAULT
         set(v) = sp.edit().putString(KEY_STYLE, v.name).apply()
 
+    var font: NumberFont
+        get() = sp.getString(KEY_FONT, null)
+            ?.let { runCatching { NumberFont.valueOf(it) }.getOrNull() }
+            ?: NumberFont.DEFAULT
+        set(v) = sp.edit().putString(KEY_FONT, v.name).apply()
+
     var showLabel: Boolean
         get() = sp.getBoolean(KEY_SHOW_LABEL, true)
         set(v) = sp.edit().putBoolean(KEY_SHOW_LABEL, v).apply()
@@ -40,6 +46,24 @@ class Prefs(ctx: Context) {
         get() = sp.getBoolean(KEY_SAMPLE_VALUES, false)
         set(v) = sp.edit().putBoolean(KEY_SAMPLE_VALUES, v).apply()
 
+    /** Dati delle righe del campo pagina [page] (1..[Pages.COUNT]), in ordine. */
+    fun pageRows(page: Int): List<String> =
+        Pages.sanitize(page, sp.getString(pageKey(page), null)?.split(',').orEmpty())
+
+    fun setPageRows(page: Int, ids: List<String>) =
+        sp.edit().putString(pageKey(page), Pages.sanitize(page, ids).joinToString(",")).apply()
+
+    fun pageRowsFlow(page: Int): Flow<List<String>> = callbackFlow {
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
+            if (key == pageKey(page)) trySend(pageRows(page))
+        }
+        sp.registerOnSharedPreferenceChangeListener(listener)
+        send(pageRows(page))
+        awaitClose { sp.unregisterOnSharedPreferenceChangeListener(listener) }
+    }
+
+    private fun pageKey(page: Int) = "page_${page}_rows"
+
     /** Stile, didascalia e fascia come Flow: i campi si ridisegnano appena cambiano nell'app. */
     fun lookFlow(): Flow<Look> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -50,13 +74,14 @@ class Prefs(ctx: Context) {
         awaitClose { sp.unregisterOnSharedPreferenceChangeListener(listener) }
     }
 
-    fun look() = Look(style, showLabel, bannerRoom, sampleValues)
+    fun look() = Look(style, showLabel, bannerRoom, sampleValues, font)
 
     data class Look(
         val style: FieldStyle,
         val showLabel: Boolean,
         val bannerRoom: Boolean = true,
         val sampleValues: Boolean = false,
+        val font: NumberFont = NumberFont.DEFAULT,
     )
 
     companion object {
@@ -65,6 +90,7 @@ class Prefs(ctx: Context) {
         private const val KEY_SHOW_LABEL = "show_label"
         private const val KEY_BANNER_ROOM = "banner_room"
         private const val KEY_SAMPLE_VALUES = "sample_values"
-        private val LOOK_KEYS = setOf(KEY_STYLE, KEY_SHOW_LABEL, KEY_BANNER_ROOM, KEY_SAMPLE_VALUES)
+        private const val KEY_FONT = "font"
+        private val LOOK_KEYS = setOf(KEY_STYLE, KEY_SHOW_LABEL, KEY_BANNER_ROOM, KEY_SAMPLE_VALUES, KEY_FONT)
     }
 }

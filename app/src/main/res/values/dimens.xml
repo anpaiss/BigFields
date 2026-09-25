@@ -14,4 +14,6 @@
     <!-- Fascia lasciata al banner "next cue" della navigazione. Stima da
          BetterEta, da misurare con uno screenshot in navigazione. -->
     <dimen name="banner_band">100px</dimen>
+    <!-- Separatore tra le righe di un campo pagina -->
+    <dimen name="row_gap">4px</dimen>
 </resources>

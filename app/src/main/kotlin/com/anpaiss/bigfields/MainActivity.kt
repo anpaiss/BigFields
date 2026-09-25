@@ -4,116 +4,112 @@ import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.FrameLayout
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 
-/** Impostazioni: stile, didascalia, fascia per il banner, anteprima e elenco dei campi. */
+/** Impostazioni: stile, didascalia, fascia per il banner, righe dei campi pagina, anteprima. */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var prefs: Prefs
+    private var previewPage = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         prefs = Prefs(this)
+        NumberRenderer.init(this)
 
-        val spinner = findViewById<Spinner>(R.id.sp_style)
         val styles = FieldStyle.entries
-        spinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, styles.map { it.label })
-        spinner.setSelection(styles.indexOf(prefs.style))
-        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                (view as? TextView)?.setTextColor(Color.WHITE)
-                prefs.style = styles[pos]
-                showPreview()
-            }
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        findViewById<Spinner>(R.id.sp_style).setup(styles.map { it.label }, styles.indexOf(prefs.style)) { pos ->
+            prefs.style = styles[pos]
+            showPreview()
         }
+        val fonts = NumberFont.entries
+        findViewById<Spinner>(R.id.sp_font).setup(fonts.map { it.label }, fonts.indexOf(prefs.font)) { pos ->
+            prefs.font = fonts[pos]
+            showPreview()
+        }
+        findViewById<SwitchCompat>(R.id.sw_label).bind(prefs.showLabel) { prefs.showLabel = it }
+        findViewById<SwitchCompat>(R.id.sw_banner).bind(prefs.bannerRoom) { prefs.bannerRoom = it }
+        findViewById<SwitchCompat>(R.id.sw_sample).bind(prefs.sampleValues) { prefs.sampleValues = it }
 
-        findViewById<SwitchCompat>(R.id.sw_label).apply {
-            isChecked = prefs.showLabel
-            setOnCheckedChangeListener { _, checked -> prefs.showLabel = checked; showPreview() }
-        }
-        findViewById<SwitchCompat>(R.id.sw_banner).apply {
-            isChecked = prefs.bannerRoom
-            setOnCheckedChangeListener { _, checked -> prefs.bannerRoom = checked; showPreview() }
-        }
+        buildPageEditors(findViewById(R.id.pages))
 
-        findViewById<SwitchCompat>(R.id.sw_sample).apply {
-            isChecked = prefs.sampleValues
-            setOnCheckedChangeListener { _, checked -> prefs.sampleValues = checked }
-        }
-
-        findViewById<TextView>(R.id.tv_fields).text = Catalog.all.joinToString("\n") {
-            "• " + getString(resources.getIdentifier("f_${it.typeId.replace('-', '_')}_name", "string", packageName))
-        }
+        findViewById<TextView>(R.id.tv_fields).text = Catalog.all.joinToString("\n") { "• " + nameOf(it) }
         showPreview()
     }
 
+    private fun nameOf(m: Metric): String =
+        getString(resources.getIdentifier("f_${m.typeId.replace('-', '_')}_name", "string", packageName))
+
+    /** Per ogni campo pagina quattro menu: i dati delle righe, "—" = riga non usata. */
+    private fun buildPageEditors(container: LinearLayout) {
+        val choices = listOf(NONE) + Catalog.all.map { nameOf(it) }
+        for (page in 1..Pages.COUNT) {
+            container.addView(TextView(this).apply {
+                text = "Big Page $page"
+                setTextColor(Color.WHITE)
+                textSize = 16f
+                setPadding(0, dp(14), 0, dp(2))
+            })
+            val spinners = mutableListOf<Spinner>()
+            val rows = prefs.pageRows(page)
+            for (i in 0 until Pages.MAX_ROWS) {
+                val current = rows.getOrNull(i)?.let { id -> Catalog.all.indexOfFirst { it.typeId == id } + 1 } ?: 0
+                val sp = Spinner(this)
+                spinners += sp
+                sp.setup(choices, current) {
+                    val ids = spinners.map { s -> s.selectedItemPosition }
+                        .filter { it > 0 }.map { Catalog.all[it - 1].typeId }
+                    prefs.setPageRows(page, ids)
+                    previewPage = page
+                    showPreview()
+                }
+                container.addView(sp, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(44)))
+            }
+        }
+    }
+
     /**
-     * Una pagina a due campi in pixel veri (velocità sopra, frequenza cardiaca
-     * in zona 3 sotto), con sopra il banner di navigazione simulato, poi
-     * rimpicciolita per stare nel riquadro. Stessi layout e colori del Karoo.
+     * Il campo pagina scelto, disegnato con lo stesso codice del Karoo
+     * (RemoteViews applicate qui) a grandezza vera 478x642 px e rimpicciolito
+     * nel riquadro, con il banner di navigazione simulato in fondo.
      */
     private fun showPreview() {
         val look = prefs.look()
         findViewById<TextView>(R.id.tv_banner_hint).text =
-            if (look.bannerRoom) "On: while navigating, every field keeps its bottom band free. The banner never covers a number, " +
-                "and all numbers stay the same size, a little smaller. Without navigation the numbers fill the cell."
-            else "Off: the numbers are larger. While navigating, the banner covers the bottom of the lower field."
+            if (look.bannerRoom) "On: while navigating, a band at the bottom of the page stays free for the banner; " +
+                "the rows share the rest equally. Without navigation the rows fill the page."
+            else "Off: the rows always fill the page. While navigating, the banner covers the bottom of the last row."
+        findViewById<TextView>(R.id.tv_preview_title).text = "PREVIEW: BIG PAGE $previewPage WHILE NAVIGATING"
 
+        val frames = prefs.pageRows(previewPage).mapNotNull { Catalog.byTypeId(it) }.map {
+            FieldFrames.frame(it, it.sample, 3, look, Units(), Align.CENTER, System.currentTimeMillis())
+        }
+        val drawing = PageRenderer.drawing(frames, PAGE_W_PX, PAGE_H_PX, cellDims(resources), look.style)
         val host = findViewById<FrameLayout>(R.id.preview)
         host.removeAllViews()
-
-        val page = FrameLayout(this).apply { setBackgroundColor(Color.BLACK) }
-        val column = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
-        val dims = cellDims(resources)
-        val frames = listOf("speed" to null, "hr" to 3).mapNotNull { (typeId, zone) ->
-            Catalog.byTypeId(typeId)?.let {
-                FieldFrames.frame(it, it.sample, zone, look, Units(), Align.CENTER, System.currentTimeMillis())
-            }
-        }
-        // Come sul Karoo: cifre alte uguali in tutta la pagina
-        val areas = frames.map { CellGeometry.numberArea(CELL_W_PX, CELL_H_PX, dims, it.showLabel, it.bannerBand) }
-        val digitH = frames.zip(areas).minOf { (f, a) -> NumberRenderer.maxDigitHeight(f.template, a.first, a.second) }
-        for ((f, a) in frames.zip(areas)) {
-            column.addView(cell(f, a, digitH), LinearLayout.LayoutParams(CELL_W_PX, CELL_H_PX).apply { bottomMargin = GAP_PX })
-        }
-        page.addView(column)
+        val page = FrameLayout(this)
+        page.addView(PageRenderer.remoteViews(packageName, drawing).apply(this, page),
+            FrameLayout.LayoutParams(PAGE_W_PX, PAGE_H_PX))
         page.addView(banner(), FrameLayout.LayoutParams(PAGE_W_PX, resources.getDimensionPixelSize(R.dimen.banner_band),
             Gravity.BOTTOM))
         host.addView(page, FrameLayout.LayoutParams(PAGE_W_PX, PAGE_H_PX))
-
         host.post {
-            val scale = host.height.toFloat() / PAGE_H_PX
+            val scale = minOf(host.width.toFloat() / PAGE_W_PX, host.height.toFloat() / PAGE_H_PX)
             page.pivotX = 0f
             page.pivotY = 0f
             page.scaleX = scale
             page.scaleY = scale
             page.translationX = (host.width - PAGE_W_PX * scale) / 2f
         }
-    }
-
-    private fun cell(f: FieldFrame, area: Pair<Int, Int>, digitH: Float): View {
-        val v = LayoutInflater.from(this).inflate(layoutFor(f), null, false)
-        val root = v.findViewById<View>(R.id.root)
-        if (f.colors.bgRes != null) root.setBackgroundResource(f.colors.bgRes) else root.setBackgroundColor(f.colors.fill)
-        v.findViewById<TextView>(R.id.tv_label).apply { text = f.label; setTextColor(f.colors.label) }
-        v.findViewById<ImageView>(R.id.iv_value).apply {
-            setImageBitmap(NumberRenderer.render(f.text, f.align, area.first, area.second, digitH))
-            setColorFilter(f.colors.value)
-        }
-        return v
     }
 
     /** Il banner "next cue" del Karoo, disegnato alla buona: serve a vedere cosa copre. */
@@ -127,16 +123,36 @@ class MainActivity : AppCompatActivity() {
             setColor(0xFF2E7D32.toInt())
             cornerRadius = 18f
         }
-        layoutParams = ViewGroup.LayoutParams(PAGE_W_PX, ViewGroup.LayoutParams.MATCH_PARENT)
+    }
+
+    private fun dp(v: Int) = (v * resources.displayMetrics.density).toInt()
+
+    private fun Spinner.setup(items: List<String>, selected: Int, onPick: (Int) -> Unit) {
+        adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, items)
+        setSelection(selected, false)
+        // Android chiama il listener anche alla prima disposizione: conta solo un cambio vero
+        var last = selected
+        onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
+                (view as? TextView)?.setTextColor(Color.WHITE)
+                if (pos == last) return
+                last = pos
+                onPick(pos)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+    }
+
+    private fun SwitchCompat.bind(value: Boolean, onChange: (Boolean) -> Unit) {
+        isChecked = value
+        setOnCheckedChangeListener { _, checked -> onChange(checked); showPreview() }
     }
 
     companion object {
-        // Pagina di corsa del Karoo 3 misurata alla prima prova (25/09): una
-        // cella a pagina intera è 478x642 px; qui divisa in due.
-        private const val PAGE_W_PX = 480
-        private const val CELL_W_PX = 478
-        private const val CELL_H_PX = 318
-        private const val GAP_PX = 3
-        private const val PAGE_H_PX = 2 * (CELL_H_PX + GAP_PX)
+        private const val NONE = "—"
+
+        // Una cella a pagina intera sul Karoo 3, misurata alla prima prova (25/09)
+        private const val PAGE_W_PX = 478
+        private const val PAGE_H_PX = 642
     }
 }

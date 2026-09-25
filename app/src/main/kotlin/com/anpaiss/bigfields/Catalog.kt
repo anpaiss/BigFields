@@ -10,6 +10,9 @@ import io.hammerhead.karooext.models.DataType.Type
  * BetterEta; TIME_TO_DESTINATION in ms verificato il 30/08. Le altre sono da
  * confermare sul Karoo: il log registra il primo valore grezzo di ogni campo
  * (riga "DATA").
+ *
+ * I valori d'esempio di distanze e dislivelli sono al massimo realistico
+ * (999 km, 1000 m): l'anteprima mostra il caso che riempie di più la riga.
  */
 object Catalog {
 
@@ -25,17 +28,17 @@ object Catalog {
         Metric("avg-power",     Type.AVERAGE_POWER,                 "AVG POWER",    Kind.COUNT,           176.0, "W",    "888"),
         Metric("np",            Type.NORMALIZED_POWER,              "NORM POWER",   Kind.COUNT,           192.0, "W",    "888"),
         Metric("cadence",       Type.CADENCE,                       "CADENCE",      Kind.COUNT,            84.0, "RPM",  "188"),
-        Metric("distance",      Type.DISTANCE,                      "DISTANCE",     Kind.DISTANCE,      23450.0),
+        Metric("distance",      Type.DISTANCE,                      "DISTANCE",     Kind.DISTANCE,     999000.0),
         Metric("ride-time",     Type.RIDE_TIME,                     "RIDE TIME",    Kind.DURATION,    5025000.0),
         Metric("elapsed-time",  Type.ELAPSED_TIME,                  "ELAPSED",      Kind.DURATION,    5710000.0),
         Metric("clock",         null,                               "TIME",         Kind.CLOCK,             0.0),
         Metric("grade",         Type.ELEVATION_GRADE,               "GRADE",        Kind.GRADE,             7.4),
         Metric("altitude",      Type.PRESSURE_ELEVATION_CORRECTION, "ALTITUDE",     Kind.ELEVATION,       812.0),
-        Metric("ascent",        Type.ELEVATION_GAIN,                "ASCENT",       Kind.ELEVATION,       640.0),
-        Metric("dist-to-dest",  Type.DISTANCE_TO_DESTINATION,       "TO DEST",      Kind.DISTANCE,      18200.0),
+        Metric("ascent",        Type.ELEVATION_GAIN,                "ASCENT",       Kind.ELEVATION,      1000.0),
+        Metric("dist-to-dest",  Type.DISTANCE_TO_DESTINATION,       "TO DEST",      Kind.DISTANCE,     999000.0),
         Metric("time-to-dest",  Type.TIME_TO_DESTINATION,           "TIME TO DEST", Kind.DURATION_HM, 3480000.0),
         Metric("arrival",       Type.TIME_TO_DESTINATION,           "ARRIVAL",      Kind.ARRIVAL,     3480000.0),
-        Metric("climb-left",    Type.ELEVATION_REMAINING,           "CLIMB LEFT",   Kind.ELEVATION,       420.0),
+        Metric("climb-left",    Type.ELEVATION_REMAINING,           "CLIMB LEFT",   Kind.ELEVATION,      1000.0),
         Metric("next-turn",     Type.DISTANCE_TO_NEXT_TURN,         "NEXT TURN",    Kind.SHORT_DISTANCE,  350.0),
         Metric("dist-to-top",   Type.DISTANCE_TO_TOP,               "TO TOP",       Kind.SHORT_DISTANCE, 2300.0),
         Metric("elev-to-top",   Type.ELEVATION_TO_TOP,              "UP TO TOP",    Kind.ELEVATION,       185.0),

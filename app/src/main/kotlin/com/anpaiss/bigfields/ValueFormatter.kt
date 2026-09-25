@@ -51,7 +51,7 @@ object ValueFormatter {
         val v = raw ?: 0.0
         val text = when (kind) {
             Kind.SPEED -> oneDecimal(v * if (units.imperialDistance) MPS_TO_MPH else MPS_TO_KMH)
-            Kind.DISTANCE -> oneDecimal(v / if (units.imperialDistance) M_PER_MILE else 1000.0)
+            Kind.DISTANCE -> distance(v / if (units.imperialDistance) M_PER_MILE else 1000.0)
             Kind.SHORT_DISTANCE -> shortDistance(v, units)
             Kind.ELEVATION -> whole(if (units.imperialElevation) v * FT_PER_M else v)
             Kind.GRADE, Kind.COUNT, Kind.PERCENT -> whole(v)
@@ -90,6 +90,13 @@ object ValueFormatter {
         Kind.DURATION_HM -> "8:88"
         Kind.ARRIVAL, Kind.CLOCK -> "88:88"
     }
+
+    /**
+     * Un decimale sotto 100, intero da 100 in su: "123" è largo quanto "88.8",
+     * così i giri da strada a tre cifre non rimpiccioliscono il numero, e a
+     * quelle distanze il decimale non serve (Andrea, 25/09).
+     */
+    private fun distance(v: Double): String = if (abs(v) < 99.95) oneDecimal(v) else whole(v)
 
     private fun shortDistance(m: Double, units: Units): String = when {
         units.imperialDistance && m < SHORT_LIMIT_MI_M -> whole(m * FT_PER_M)

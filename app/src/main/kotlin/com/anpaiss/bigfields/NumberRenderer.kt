@@ -66,13 +66,18 @@ object NumberRenderer {
         val f = face(font)
         synchronized(f) {
             f.paint.textSize = REF_SIZE * digitH / f.refDigitH
+            // Rete di sicurezza: un numero più largo del template si rimpicciolisce
+            // da solo invece di uscire dalla cella.
+            val maxW = w * CellGeometry.FILL_W
+            f.paint.measureText(text).let { if (it > maxW) f.paint.textSize *= maxW / it }
             val tw = f.paint.measureText(text)
             val x = when (align) {
                 Align.LEFT -> 0f
                 Align.CENTER -> (w - tw) / 2f
                 Align.RIGHT -> w - tw
             }.coerceAtLeast(0f)
-            Canvas(bmp).drawText(text, x, (h + digitH) / 2f, f.paint)
+            val drawnH = digitH * f.paint.textSize / (REF_SIZE * digitH / f.refDigitH)
+            Canvas(bmp).drawText(text, x, (h + drawnH) / 2f, f.paint)
         }
         return bmp
     }

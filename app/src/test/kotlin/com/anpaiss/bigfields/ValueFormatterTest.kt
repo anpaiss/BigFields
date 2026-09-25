@@ -36,7 +36,10 @@ class ValueFormatterTest {
     @Test fun `distance in km and miles`() {
         assertEquals(Formatted("23.5", "KM", "88.8"), fmt("distance", 23450.0))
         assertEquals("14.6", fmt("distance", 23450.0, imperial).text)
-        assertEquals("123.4", fmt("distance", 123400.0).text)
+        assertEquals("99.9", fmt("distance", 99940.0).text)
+        assertEquals("100", fmt("distance", 99960.0).text)
+        assertEquals("123", fmt("distance", 123400.0).text)
+        assertEquals("999", fmt("distance", 999000.0).text)
     }
 
     @Test fun `short distance switches from metres to km`() {

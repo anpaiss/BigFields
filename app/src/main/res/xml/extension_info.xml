@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generato dal catalogo (Catalog.kt); CatalogTest verifica che coincidano. -->
+<ExtensionInfo
+    displayName="@string/extension_name"
+    icon="@drawable/ic_big_fields"
+    id="big-fields"
+    scansDevices="false">
+
+    <DataType
+        typeId="speed"
+        displayName="@string/f_speed_name"
+        description="@string/f_speed_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="speed-3s"
+        displayName="@string/f_speed_3s_name"
+        description="@string/f_speed_3s_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="avg-speed"
+        displayName="@string/f_avg_speed_name"
+        description="@string/f_avg_speed_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="max-speed"
+        displayName="@string/f_max_speed_name"
+        description="@string/f_max_speed_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="hr"
+        displayName="@string/f_hr_name"
+        description="@string/f_hr_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="avg-hr"
+        displayName="@string/f_avg_hr_name"
+        description="@string/f_avg_hr_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="power"
+        displayName="@string/f_power_name"
+        description="@string/f_power_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="power-3s"
+        displayName="@string/f_power_3s_name"
+        description="@string/f_power_3s_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="avg-power"
+        displayName="@string/f_avg_power_name"
+        description="@string/f_avg_power_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="np"
+        displayName="@string/f_np_name"
+        description="@string/f_np_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="cadence"
+        displayName="@string/f_cadence_name"
+        description="@string/f_cadence_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="distance"
+        displayName="@string/f_distance_name"
+        description="@string/f_distance_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="ride-time"
+        displayName="@string/f_ride_time_name"
+        description="@string/f_ride_time_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="elapsed-time"
+        displayName="@string/f_elapsed_time_name"
+        description="@string/f_elapsed_time_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="clock"
+        displayName="@string/f_clock_name"
+        description="@string/f_clock_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="grade"
+        displayName="@string/f_grade_name"
+        description="@string/f_grade_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="altitude"
+        displayName="@string/f_altitude_name"
+        description="@string/f_altitude_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="ascent"
+        displayName="@string/f_ascent_name"
+        description="@string/f_ascent_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="dist-to-dest"
+        displayName="@string/f_dist_to_dest_name"
+        description="@string/f_dist_to_dest_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="time-to-dest"
+        displayName="@string/f_time_to_dest_name"
+        description="@string/f_time_to_dest_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="arrival"
+        displayName="@string/f_arrival_name"
+        description="@string/f_arrival_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="climb-left"
+        displayName="@string/f_climb_left_name"
+        description="@string/f_climb_left_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="next-turn"
+        displayName="@string/f_next_turn_name"
+        description="@string/f_next_turn_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="dist-to-top"
+        displayName="@string/f_dist_to_top_name"
+        description="@string/f_dist_to_top_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="elev-to-top"
+        displayName="@string/f_elev_to_top_name"
+        description="@string/f_elev_to_top_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="lap-time"
+        displayName="@string/f_lap_time_name"
+        description="@string/f_lap_time_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="lap-distance"
+        displayName="@string/f_lap_distance_name"
+        description="@string/f_lap_distance_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="lap-avg-speed"
+        displayName="@string/f_lap_avg_speed_name"
+        description="@string/f_lap_avg_speed_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="lap-power"
+        displayName="@string/f_lap_power_name"
+        description="@string/f_lap_power_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="temperature"
+        displayName="@string/f_temperature_name"
+        description="@string/f_temperature_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="battery"
+        displayName="@string/f_battery_name"
+        description="@string/f_battery_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="calories"
+        displayName="@string/f_calories_name"
+        description="@string/f_calories_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+</ExtensionInfo>

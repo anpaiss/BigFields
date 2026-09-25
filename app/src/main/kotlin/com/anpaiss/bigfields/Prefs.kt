@@ -2,9 +2,6 @@ package com.anpaiss.bigfields
 
 import android.content.Context
 import android.content.SharedPreferences
-import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
 
 /** Preferenze utente. Stesso pattern di Prefs.kt in AxsRatio e BetterEta. */
 class Prefs(ctx: Context) {
@@ -70,26 +67,19 @@ class Prefs(ctx: Context) {
 
     private fun pref(what: String, value: Any) = FieldLog.shared?.log("PREF", "$what = $value")
 
-    fun pageRowsFlow(page: Int): Flow<List<String>> = callbackFlow {
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key == pageKey(page)) trySend(pageRows(page))
-        }
-        sp.registerOnSharedPreferenceChangeListener(listener)
-        send(pageRows(page))
-        awaitClose { sp.unregisterOnSharedPreferenceChangeListener(listener) }
-    }
-
     private fun pageKey(page: Int) = "page_${page}_rows"
 
-    /** Stile, didascalia e fascia come Flow: i campi si ridisegnano appena cambiano nell'app. */
-    fun lookFlow(): Flow<Look> = callbackFlow {
-        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-            if (key in LOOK_KEYS) trySend(look())
-        }
+    /**
+     * Un solo ascoltatore per processo, tenuto come campo da chi lo registra:
+     * SharedPreferences tiene gli ascoltatori con riferimenti deboli, e quelli
+     * creati dentro un Flow per ogni riga venivano raccolti dalla memoria. Le
+     * righe restavano ferme sullo stile vecchio (prima prova 25/09).
+     */
+    fun register(listener: SharedPreferences.OnSharedPreferenceChangeListener) =
         sp.registerOnSharedPreferenceChangeListener(listener)
-        send(look())
-        awaitClose { sp.unregisterOnSharedPreferenceChangeListener(listener) }
-    }
+
+    fun unregister(listener: SharedPreferences.OnSharedPreferenceChangeListener) =
+        sp.unregisterOnSharedPreferenceChangeListener(listener)
 
     fun look() = Look(style, showLabel, bannerRoom, sampleValues, font)
 
@@ -109,6 +99,5 @@ class Prefs(ctx: Context) {
         private const val KEY_SAMPLE_VALUES = "sample_values"
         private const val KEY_FONT = "font"
         private const val KEY_DIAGNOSTIC = "diagnostic_log"
-        private val LOOK_KEYS = setOf(KEY_STYLE, KEY_SHOW_LABEL, KEY_BANNER_ROOM, KEY_SAMPLE_VALUES, KEY_FONT)
     }
 }

@@ -57,7 +57,6 @@ class BigFieldDataType(
             "grid=${config.gridSize} nativeTextSize=${config.textSize}sp align=${config.alignment} " +
             "preview=${config.preview}")
         val align = config.align()
-        val prefs = Prefs(context)
         val viewKey = "$dataTypeId#${System.nanoTime()}"
         var loggedSize = false
         val stats = RedrawStats(metric.typeId)
@@ -66,11 +65,9 @@ class BigFieldDataType(
             emitter.onNext(UpdateGraphicConfig(showHeader = false))
 
             // Anteprima nell'editor: niente fascia, la cella è piccola e il banner lì non c'è
-            val frames = if (config.preview) {
-                previewFrames(metric, prefs.lookFlow().map { it.copy(bannerRoom = false) }, hub, align)
-            } else {
-                liveFrames(metric, rideLook(prefs, hub), hub, align).whileVisible(hub.visibleDataTypeIds, dataTypeId)
-            }
+            val input = if (config.preview) previewInput(metric) else rowInput(metric, hub)
+            val look = if (config.preview) previewLook(hub) else rideLook(hub)
+            val frames = combine(input, look, hub.units) { i, l, units -> frameOf(metric, i, l, units, align) }
 
             // Altezza delle cifre: la massima per questa cella, poi la più bassa
             // tra i campi della pagina, così le cifre sono alte uguali ovunque.
@@ -83,9 +80,12 @@ class BigFieldDataType(
                 Drawing(f, w, h, own)
             }
             val page = if (config.preview) flowOf(emptyList()) else hub.pageDigitHeights()
-            combine(drawings, page) { d, onPage ->
+            val sized = combine(drawings, page) { d, onPage ->
                 d.copy(digitH = CellGeometry.pageDigitHeight(d.digitH, onPage).toInt().toFloat())
-            }.distinctUntilChanged().collect { d ->
+            }.distinctUntilChanged()
+            // Tornando visibile o alla chiusura dell'app il campo ridisegna sempre (vedi Redraw)
+            val shown = if (config.preview) sized else sized.whileVisible(hub.visibleDataTypeIds, dataTypeId)
+            combine(shown, Redraw.requests) { d, _ -> d }.collect { d ->
                 if (!loggedSize) {
                     loggedSize = true
                     FieldLog.shared?.log("VIEW", "${metric.typeId} area numero ${d.w}x${d.h} px, cifre ${d.digitH.toInt()} px")

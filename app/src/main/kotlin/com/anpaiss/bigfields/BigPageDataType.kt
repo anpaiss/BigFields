@@ -36,7 +36,6 @@ class BigPageDataType(
         FieldLog.shared?.log("VIEW", "startView ${Pages.typeId(page)} size=${config.viewSize} " +
             "grid=${config.gridSize} preview=${config.preview}")
         val align = config.align()
-        val prefs = Prefs(context)
         val dims = cellDims(context.resources)
         val (cellW, cellH) = config.viewSize
         var loggedSize = false
@@ -45,18 +44,25 @@ class BigPageDataType(
         scope.launch {
             emitter.onNext(UpdateGraphicConfig(showHeader = false))
 
-            val look = if (config.preview) prefs.lookFlow().map { it.copy(bannerRoom = false) } else rideLook(prefs, hub)
-            val rows: Flow<List<FieldFrame>> = prefs.pageRowsFlow(page).flatMapLatest { ids ->
+            val look = if (config.preview) previewLook(hub) else rideLook(hub)
+            val ids = hub.pageRows.map { it[page - 1] }.distinctUntilChanged()
+            // Dati di tutte le righe insieme, poi un solo aspetto per tutte: niente
+            // disegni intermedi con righe in stili diversi.
+            val inputs: Flow<List<Pair<Metric, RowInput>>> = ids.flatMapLatest { ids ->
                 val metrics = ids.mapNotNull { Catalog.byTypeId(it) }
-                combine(metrics.map {
-                    if (config.preview) previewFrames(it, look, hub, align) else liveFrames(it, look, hub, align)
-                }) { it.toList() }
+                combine(metrics.map { if (config.preview) previewInput(it) else rowInput(it, hub) }) {
+                    metrics.zip(it.toList())
+                }
             }
-            val visibleRows = if (config.preview) rows else rows.whileVisible(hub.visibleDataTypeIds, dataTypeId)
+            val drawings = combine(inputs, look, hub.units) { rows, l, units ->
+                PageRenderer.drawing(rows.map { (m, input) -> frameOf(m, input, l, units, align) },
+                    cellW, cellH, dims, l.style)
+            }.distinctUntilChanged()
+            // Tornando visibile o alla chiusura dell'app il campo ridisegna sempre, anche
+            // se per lui il disegno non è cambiato: il Karoo può averne perso uno (vedi Redraw).
+            val shown = if (config.preview) drawings else drawings.whileVisible(hub.visibleDataTypeIds, dataTypeId)
 
-            combine(visibleRows.distinctUntilChanged(), prefs.lookFlow()) { frames, l ->
-                PageRenderer.drawing(frames, cellW, cellH, dims, l.style)
-            }.distinctUntilChanged().collect { d ->
+            combine(shown, Redraw.requests) { d, _ -> d }.collect { d ->
                 if (!loggedSize) {
                     loggedSize = true
                     FieldLog.shared?.log("VIEW", "${Pages.typeId(page)} ${d.frames.size} righe, " +

@@ -1,5 +1,6 @@
 package com.anpaiss.bigfields
 
+import android.content.SharedPreferences
 import io.hammerhead.karooext.KarooSystemService
 import io.hammerhead.karooext.extension.KarooExtension
 import io.hammerhead.karooext.models.ActiveRidePage
@@ -26,6 +27,19 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
 
     private lateinit var karooSystem: KarooSystemService
     private lateinit var log: FieldLog
+    private lateinit var prefs: Prefs
+
+    // Campo, non variabile locale: SharedPreferences tiene gli ascoltatori con
+    // riferimenti deboli (vedi Prefs.register).
+    private val prefsListener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> readPrefs() }
+    private val _look = MutableStateFlow(Prefs.Look(FieldStyle.DEFAULT, true))
+    private val _pageRows = MutableStateFlow(Pages.defaults)
+
+    /** Aspetto scelto nell'app, per tutti i campi. */
+    val look: StateFlow<Prefs.Look> = _look
+
+    /** Righe dei campi pagina, indice 0 = Big Page 1. */
+    val pageRows: StateFlow<List<List<String>>> = _pageRows
     private val consumerIds = mutableListOf<String>()
 
     private val connected = MutableStateFlow(false)
@@ -54,6 +68,9 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
     override fun onCreate() {
         super.onCreate()
         log = FieldLog.get(applicationContext)
+        prefs = Prefs(applicationContext)
+        readPrefs()
+        prefs.register(prefsListener)
         NumberRenderer.init(applicationContext)
         val dm = resources.displayMetrics
         log.log("SYS", "=== BigFields avviato: schermo ${dm.widthPixels}x${dm.heightPixels} px, " +
@@ -126,8 +143,14 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
         awaitClose { karooSystem.removeConsumer(id) }
     }
 
+    private fun readPrefs() {
+        _look.value = prefs.look()
+        _pageRows.value = (1..Pages.COUNT).map { prefs.pageRows(it) }
+    }
+
     override fun onDestroy() {
         log.log("SYS", "=== BigFields fermato")
+        prefs.unregister(prefsListener)
         consumerIds.forEach { karooSystem.removeConsumer(it) }
         consumerIds.clear()
         karooSystem.disconnect()

@@ -51,6 +51,18 @@ class MainActivity : AppCompatActivity() {
     private fun nameOf(m: Metric): String =
         getString(resources.getIdentifier("f_${m.typeId.replace('-', '_')}_name", "string", packageName))
 
+    /**
+     * Mentre l'app è in primo piano la schermata di corsa è in pausa e può
+     * perdere l'ultimo aggiornamento: un secondo dopo la chiusura tutti i campi
+     * si ridisegnano con le impostazioni nuove.
+     */
+    override fun onStop() {
+        super.onStop()
+        // Handler del main looper, non la view: dopo onStop la finestra può essere già staccata
+        android.os.Handler(android.os.Looper.getMainLooper())
+            .postDelayed({ Redraw.requests.value = System.currentTimeMillis() }, 1_000L)
+    }
+
     /** Per ogni campo pagina quattro menu: i dati delle righe, "—" = riga non usata. */
     private fun buildPageEditors(container: LinearLayout) {
         val choices = listOf(NONE) + Catalog.all.map { nameOf(it) }
@@ -107,7 +119,10 @@ class MainActivity : AppCompatActivity() {
             Gravity.BOTTOM))
         host.addView(page, FrameLayout.LayoutParams(PAGE_W_PX, PAGE_H_PX))
         host.post {
-            val scale = minOf(host.width.toFloat() / PAGE_W_PX, host.height.toFloat() / PAGE_H_PX)
+            // Riquadro con le proporzioni della pagina: nessuna striscia vuota sotto
+            val wantH = host.width * PAGE_H_PX / PAGE_W_PX
+            if (host.layoutParams.height != wantH) host.layoutParams = host.layoutParams.apply { height = wantH }
+            val scale = host.width.toFloat() / PAGE_W_PX
             page.pivotX = 0f
             page.pivotY = 0f
             page.scaleX = scale

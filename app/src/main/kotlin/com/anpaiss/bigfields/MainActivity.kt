@@ -97,7 +97,9 @@ class MainActivity : AppCompatActivity() {
         val host = findViewById<FrameLayout>(R.id.preview)
         host.removeAllViews()
         val page = FrameLayout(this)
-        page.addView(PageRenderer.remoteViews(packageName, drawing).apply(this, page),
+        // Contesto dell'applicazione, non dell'Activity: AppCompat trasformerebbe le
+        // ImageView in AppCompatImageView, che i RemoteViews rifiutano.
+        page.addView(PageRenderer.remoteViews(packageName, drawing).apply(applicationContext, page),
             FrameLayout.LayoutParams(PAGE_W_PX, PAGE_H_PX))
         page.addView(banner(), FrameLayout.LayoutParams(PAGE_W_PX, resources.getDimensionPixelSize(R.dimen.banner_band),
             Gravity.BOTTOM))

@@ -77,7 +77,7 @@
     </LinearLayout>
 
     <!-- Fascia libera per il banner "next cue" della navigazione, una sola in fondo -->
-    <View
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/banner_band" />
 

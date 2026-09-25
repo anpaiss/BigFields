@@ -30,7 +30,7 @@
         android:contentDescription="@null" />
 
     <!-- Fascia libera per il banner "next cue" della navigazione -->
-    <View
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/banner_band" />
 

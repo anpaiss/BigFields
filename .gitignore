@@ -12,3 +12,6 @@ local.properties
 .claude/
 .gradle/
 /logs
+
+# Note di sessione, fuori dal repository come negli altri progetti
+HANDOVER.md

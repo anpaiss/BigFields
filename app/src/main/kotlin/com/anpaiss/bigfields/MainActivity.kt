@@ -24,6 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         prefs = Prefs(this)
+        FieldLog.get(this)
         NumberRenderer.init(this)
 
         val styles = FieldStyle.entries
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<SwitchCompat>(R.id.sw_label).bind(prefs.showLabel) { prefs.showLabel = it }
         findViewById<SwitchCompat>(R.id.sw_banner).bind(prefs.bannerRoom) { prefs.bannerRoom = it }
         findViewById<SwitchCompat>(R.id.sw_sample).bind(prefs.sampleValues) { prefs.sampleValues = it }
+        findViewById<SwitchCompat>(R.id.sw_diag).bind(prefs.diagnosticLog) { prefs.diagnosticLog = it }
 
         buildPageEditors(findViewById(R.id.pages))
 

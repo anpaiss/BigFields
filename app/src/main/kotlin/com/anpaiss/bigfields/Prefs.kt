@@ -15,17 +15,17 @@ class Prefs(ctx: Context) {
         get() = sp.getString(KEY_STYLE, null)
             ?.let { runCatching { FieldStyle.valueOf(it) }.getOrNull() }
             ?: FieldStyle.DEFAULT
-        set(v) = sp.edit().putString(KEY_STYLE, v.name).apply()
+        set(v) = sp.edit().putString(KEY_STYLE, v.name).apply().also { pref("stile", v) }
 
     var font: NumberFont
         get() = sp.getString(KEY_FONT, null)
             ?.let { runCatching { NumberFont.valueOf(it) }.getOrNull() }
             ?: NumberFont.DEFAULT
-        set(v) = sp.edit().putString(KEY_FONT, v.name).apply()
+        set(v) = sp.edit().putString(KEY_FONT, v.name).apply().also { pref("carattere", v) }
 
     var showLabel: Boolean
         get() = sp.getBoolean(KEY_SHOW_LABEL, true)
-        set(v) = sp.edit().putBoolean(KEY_SHOW_LABEL, v).apply()
+        set(v) = sp.edit().putBoolean(KEY_SHOW_LABEL, v).apply().also { pref("didascalia", v) }
 
     /**
      * Fascia libera in fondo a OGNI campo mentre si naviga, alta quanto il
@@ -36,7 +36,7 @@ class Prefs(ctx: Context) {
      */
     var bannerRoom: Boolean
         get() = sp.getBoolean(KEY_BANNER_ROOM, true)
-        set(v) = sp.edit().putBoolean(KEY_BANNER_ROOM, v).apply()
+        set(v) = sp.edit().putBoolean(KEY_BANNER_ROOM, v).apply().also { pref("fascia banner", v) }
 
     /**
      * Solo per le prove sul Karoo senza registrare: al posto di un dato
@@ -44,14 +44,31 @@ class Prefs(ctx: Context) {
      */
     var sampleValues: Boolean
         get() = sp.getBoolean(KEY_SAMPLE_VALUES, false)
-        set(v) = sp.edit().putBoolean(KEY_SAMPLE_VALUES, v).apply()
+        set(v) = sp.edit().putBoolean(KEY_SAMPLE_VALUES, v).apply().also { pref("valori d'esempio", v) }
 
     /** Dati delle righe del campo pagina [page] (1..[Pages.COUNT]), in ordine. */
     fun pageRows(page: Int): List<String> =
         Pages.sanitize(page, sp.getString(pageKey(page), null)?.split(',').orEmpty())
 
-    fun setPageRows(page: Int, ids: List<String>) =
-        sp.edit().putString(pageKey(page), Pages.sanitize(page, ids).joinToString(",")).apply()
+    fun setPageRows(page: Int, ids: List<String>) {
+        val rows = Pages.sanitize(page, ids)
+        sp.edit().putString(pageKey(page), rows.joinToString(",")).apply()
+        pref("Big Page $page", rows.joinToString())
+    }
+
+    /**
+     * Log diagnostico (solo per le prove): cambi di stato dei dati e riepilogo
+     * dei ridisegni al minuto. Spento, restano avvio, errori e crash.
+     */
+    var diagnosticLog: Boolean
+        get() = sp.getBoolean(KEY_DIAGNOSTIC, true)
+        set(v) {
+            sp.edit().putBoolean(KEY_DIAGNOSTIC, v).apply()
+            FieldLog.shared?.verbose = v
+            FieldLog.shared?.log("PREF", "log diagnostico = $v")
+        }
+
+    private fun pref(what: String, value: Any) = FieldLog.shared?.log("PREF", "$what = $value")
 
     fun pageRowsFlow(page: Int): Flow<List<String>> = callbackFlow {
         val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
@@ -91,6 +108,7 @@ class Prefs(ctx: Context) {
         private const val KEY_BANNER_ROOM = "banner_room"
         private const val KEY_SAMPLE_VALUES = "sample_values"
         private const val KEY_FONT = "font"
+        private const val KEY_DIAGNOSTIC = "diagnostic_log"
         private val LOOK_KEYS = setOf(KEY_STYLE, KEY_SHOW_LABEL, KEY_BANNER_ROOM, KEY_SAMPLE_VALUES, KEY_FONT)
     }
 }

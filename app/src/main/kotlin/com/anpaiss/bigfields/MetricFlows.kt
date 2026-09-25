@@ -39,12 +39,20 @@ fun liveFrames(metric: Metric, look: Flow<Prefs.Look>, hub: BigFieldsExtension, 
 private fun values(metric: Metric, hub: BigFieldsExtension): Flow<Double?> {
     val type = metric.karooType ?: return flowOf(0.0)
     var logged = false
+    var lastKind: String? = null
     return hub.stream(type).onEach { state ->
         if (!logged) {
             logged = true
             FieldLog.shared?.log("DATA", "${metric.typeId} <- $type primo stato: " +
                 if (state is StreamState.Streaming) "valori=${state.dataPoint.values}" else state.toString())
         }
+        // Cambi di stato (sensore che si collega o si perde), non ogni valore
+        val kind = state::class.simpleName
+        if (lastKind != null && kind != lastKind) {
+            FieldLog.shared?.debug("DATA", "${metric.typeId}: $lastKind -> $kind" +
+                if (state is StreamState.Streaming) " valori=${state.dataPoint.values}" else "")
+        }
+        lastKind = kind
     }.map { (it as? StreamState.Streaming)?.dataPoint?.singleValue }
 }
 

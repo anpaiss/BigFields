@@ -80,6 +80,14 @@
             android:lineSpacingMultiplier="1.2" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/sw_diag"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Diagnostic log (test)"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp" />
+
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/sw_sample"
             android:layout_width="match_parent"
             android:layout_height="48dp"

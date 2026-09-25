@@ -40,6 +40,7 @@ class BigPageDataType(
         val dims = cellDims(context.resources)
         val (cellW, cellH) = config.viewSize
         var loggedSize = false
+        val stats = RedrawStats(Pages.typeId(page))
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope.launch {
             emitter.onNext(UpdateGraphicConfig(showHeader = false))
@@ -61,7 +62,14 @@ class BigPageDataType(
                     FieldLog.shared?.log("VIEW", "${Pages.typeId(page)} ${d.frames.size} righe, " +
                         "area numero ${d.w}x${d.h} px, cifre ${d.digitH.toInt()} px")
                 }
-                emitter.updateView(PageRenderer.remoteViews(context.packageName, d))
+                val t0 = System.currentTimeMillis()
+                try {
+                    emitter.updateView(PageRenderer.remoteViews(context.packageName, d))
+                } catch (e: Exception) {
+                    FieldLog.shared?.error("ERR", "Disegno di ${Pages.typeId(page)} fallito", e)
+                }
+                stats.record(d.frames.joinToString(" | ") { "'${it.text}'" } + " cifre ${d.digitH.toInt()} px",
+                    System.currentTimeMillis() - t0)
             }
         }
         emitter.setCancellable {

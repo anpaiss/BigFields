@@ -60,6 +60,7 @@ class BigFieldDataType(
         val prefs = Prefs(context)
         val viewKey = "$dataTypeId#${System.nanoTime()}"
         var loggedSize = false
+        val stats = RedrawStats(metric.typeId)
         val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
         scope.launch {
             emitter.onNext(UpdateGraphicConfig(showHeader = false))
@@ -89,7 +90,13 @@ class BigFieldDataType(
                     loggedSize = true
                     FieldLog.shared?.log("VIEW", "${metric.typeId} area numero ${d.w}x${d.h} px, cifre ${d.digitH.toInt()} px")
                 }
-                emitter.updateView(render(context, d))
+                val t0 = System.currentTimeMillis()
+                try {
+                    emitter.updateView(render(context, d))
+                } catch (e: Exception) {
+                    FieldLog.shared?.error("ERR", "Disegno di ${metric.typeId} fallito", e)
+                }
+                stats.record("'${d.f.text}' cifre ${d.digitH.toInt()} px", System.currentTimeMillis() - t0)
             }
         }
         emitter.setCancellable {

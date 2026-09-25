@@ -53,8 +53,7 @@ class BigFieldsExtension : KarooExtension("big-fields", "1") {
 
     override fun onCreate() {
         super.onCreate()
-        log = FieldLog(applicationContext)
-        FieldLog.shared = log
+        log = FieldLog.get(applicationContext)
         NumberRenderer.init(applicationContext)
         val dm = resources.displayMetrics
         log.log("SYS", "=== BigFields avviato: schermo ${dm.widthPixels}x${dm.heightPixels} px, " +

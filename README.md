@@ -26,10 +26,6 @@ The result, measured on a Karoo 3 with two values on a page:
 | Big Page, Karoo font | 131 px |
 | **Big Page, condensed font** | **180 px** (+38 %) |
 
-The same data on a native four-field page and on a three-row Big Page:
-
-![Native page and Big Page with altitude data](docs/compare-page.png)
-
 ## Big Pages
 
 Four Big Page fields are available, each with its own rows. They start with pages that are common on a mountain bike ride; change them in the app.

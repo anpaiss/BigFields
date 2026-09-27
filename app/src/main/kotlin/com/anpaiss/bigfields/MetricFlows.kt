@@ -61,6 +61,7 @@ fun frameOf(metric: Metric, input: RowInput, look: Prefs.Look, units: Units, ali
 private fun values(metric: Metric, hub: BigFieldsExtension): Flow<Double?> {
     val type = metric.karooType ?: return flowOf(0.0)
     var logged = false
+    var loggedFields = false
     var lastKind: String? = null
     return hub.stream(type).onEach { state ->
         if (!logged) {
@@ -75,12 +76,26 @@ private fun values(metric: Metric, hub: BigFieldsExtension): Flow<Double?> {
                 if (state is StreamState.Streaming) " valori=${state.dataPoint.values}" else "")
         }
         lastKind = kind
-    }.map { (it as? StreamState.Streaming)?.dataPoint?.singleValue }
+    }.map { state ->
+        val values = (state as? StreamState.Streaming)?.dataPoint?.values ?: return@map null
+        val expected = ValuePicker.fieldOf[metric.typeId]
+        val v = ValuePicker.pick(values, expected)
+        // Più valori insieme: una riga di log la prima volta, per verificare il campo scelto
+        if (values.size > 1 && !loggedFields) {
+            loggedFields = true
+            FieldLog.shared?.log("DATA", "${metric.typeId}: valori multipli ${values.keys}, " +
+                "letto ${expected ?: "nessun campo atteso"} = $v")
+        }
+        v
+    }
 }
 
 private fun zones(metric: Metric, hub: BigFieldsExtension): Flow<Int?> {
     val zone = metric.zone ?: return flowOf(null)
-    return hub.stream(zone.karooType).map { (it as? StreamState.Streaming)?.dataPoint?.singleValue?.toInt() }
+    return hub.stream(zone.karooType).map { state ->
+        (state as? StreamState.Streaming)?.dataPoint?.values
+            ?.let { ValuePicker.pick(it, ValuePicker.zoneFieldOf[zone]) }?.toInt()
+    }
 }
 
 /** Orologio a 1 s solo per i dati che cambiano col tempo; gli altri un istante fisso. */

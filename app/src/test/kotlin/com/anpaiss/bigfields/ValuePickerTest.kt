@@ -28,6 +28,11 @@ class ValuePickerTest {
         assertNull(ValuePicker.pick(mapOf("A" to 1.0, "B" to 2.0), Field.SPEED))
     }
 
+    @Test fun `a value that is not finite gives no value instead of a crash`() {
+        assertNull(ValuePicker.pick(mapOf(Field.SPEED to Double.NaN), Field.SPEED))
+        assertNull(ValuePicker.pick(mapOf("X" to Double.POSITIVE_INFINITY), null))
+    }
+
     @Test fun `every multi-value data type of the catalog has an expected field`() {
         for (id in listOf("dist-to-dest", "climb-left", "time-to-dest", "arrival")) {
             assertTrue(id, ValuePicker.fieldOf[id] != null)

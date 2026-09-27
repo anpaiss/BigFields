@@ -57,7 +57,8 @@ object ValuePicker {
      * numero sbagliato mostrato come buono.
      */
     fun pick(values: Map<String, Double>, expected: String?): Double? {
-        if (expected != null) values[expected]?.let { return it }
-        return values.values.singleOrNull() ?: values[Field.SINGLE]
+        val v = expected?.let { values[it] } ?: values.values.singleOrNull() ?: values[Field.SINGLE]
+        // NaN o infinito: "--" invece di un'eccezione nei formati (review 27/09)
+        return v?.takeIf { it.isFinite() }
     }
 }

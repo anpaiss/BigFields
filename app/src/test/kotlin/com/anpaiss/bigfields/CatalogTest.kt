@@ -39,9 +39,11 @@ class CatalogTest {
         }
     }
 
-    @Test fun `page rows drop unknown data, cap at four and fall back to the default`() {
+    @Test fun `page rows drop unknown data, cap at two and fall back to the default`() {
         assertEquals(listOf("speed", "hr"), Pages.sanitize(1, listOf("speed", "nope", "hr")))
-        assertEquals(4, Pages.sanitize(1, Catalog.all.map { it.typeId }).size)
+        assertEquals(2, Pages.sanitize(1, Catalog.all.map { it.typeId }).size)
+        // Pagine salvate con tre righe prima del limite (28/09): restano le prime due
+        assertEquals(listOf("altitude", "grade"), Pages.sanitize(4, listOf("altitude", "grade", "temperature")))
         assertEquals(Pages.defaults[1], Pages.sanitize(2, emptyList()))
     }
 

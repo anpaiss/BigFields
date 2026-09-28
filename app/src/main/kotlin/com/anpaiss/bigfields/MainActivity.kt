@@ -63,7 +63,7 @@ class MainActivity : AppCompatActivity() {
             .postDelayed({ Redraw.requests.value = System.currentTimeMillis() }, 1_000L)
     }
 
-    /** Per ogni campo pagina quattro menu: i dati delle righe, "—" = riga non usata. */
+    /** Per ogni campo pagina un menu per riga (Pages.MAX_ROWS): il dato, "—" = riga non usata. */
     private fun buildPageEditors(container: LinearLayout) {
         val choices = listOf(NONE) + Catalog.all.map { nameOf(it) }
         for (page in 1..Pages.COUNT) {

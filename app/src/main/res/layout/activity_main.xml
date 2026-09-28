@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="6dp"
-            android:text="A Big Page field fills a whole data page with up to four rows of equal height. Put one Big Page field alone on a page, then choose its rows here."
+            android:text="A Big Page field fills a whole data page with one or two rows of equal height. Put one Big Page field alone on a page, then choose its rows here."
             android:textColor="#CCCCCC"
             android:textSize="14sp"
             android:lineSpacingMultiplier="1.3" />

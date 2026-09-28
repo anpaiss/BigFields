@@ -12,7 +12,7 @@ On the Karoo 3 the numbers of the native data fields stop growing at a fixed tex
 
 BigFields brings that to the Karoo:
 
-- **Whole-page fields.** A *Big Page* is one field that takes the whole data page and shows up to four values in rows of equal height. You choose the rows in the BigFields app.
+- **Whole-page fields.** A *Big Page* is one field that takes the whole data page and shows one or two values in rows of equal height. You choose the rows in the BigFields app.
 - **Digits fitted to the cell.** The number is drawn to fill its row, measured on the real outline of the digits rather than on the line of text.
 - **A condensed font.** In a half-page row the limit is the width, and the Karoo font has digits almost as wide as they are tall. BigFields uses Barlow Condensed, whose digits grow taller in the same space.
 - **The same height on the whole page.** All numbers on a page have the same digit height, like native fields, so the page reads as one.
@@ -37,9 +37,9 @@ Four Big Page fields are available, each with its own rows. They start with page
 | Big Page 1 | distance, ascent |
 | Big Page 2 | distance to destination, climb left |
 | Big Page 3 | arrival time, time to destination (Karoo estimate) |
-| Big Page 4 | altitude, grade, temperature |
+| Big Page 4 | altitude, grade |
 
-Any of the 32 single fields below can be a row.
+Any of the 32 single fields below can be a row. A Big Page has at most two rows: with three, the digits would be about as tall as native fields, and the reason for a Big Page would be gone.
 
 ## Single fields
 
@@ -65,7 +65,7 @@ Changes made in the app show on the ride pages as soon as you leave it. No permi
 - **Number font**: *Condensed (Barlow)*, the default, or the *Karoo* font.
 - **Show label and unit**: the small caption above each number. In a two-row page the numbers are limited by the width, so hiding the caption does not make them larger; it helps on pages with three or four rows.
 - **Leave room for the navigation banner**: while navigating, the Karoo draws its turn banner over the bottom of the page and does not tell extensions. With this option on, a Big Page keeps a band free at the bottom while navigation is active, and the rows share the rest equally. Without navigation the rows always fill the page.
-- **Big Pages**: up to four rows for each Big Page; *—* leaves a row out. The preview below shows the page as it will look while navigating.
+- **Big Pages**: one or two rows for each Big Page; *—* leaves a row out. The preview below shows the page as it will look while navigating.
 - **Diagnostic log (test)** and **Show sample values (test)**: for testing, see the technical notes.
 
 ## Styles

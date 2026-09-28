@@ -4,14 +4,17 @@ import android.widget.RemoteViews
 
 /**
  * Campi pagina: un solo campo nell'editor del Karoo che occupa la pagina e
- * dentro disegna da 1 a [MAX_ROWS] dati in righe di altezza uguale. Nel Karoo 3
+ * dentro disegna 1 o [MAX_ROWS] dati in righe di altezza uguale. Nel Karoo 3
  * l'altezza dei campi la decide l'editor (due campi grafici = 21 e 39 righe su
  * 60, 25/09): solo così la divisione la scegliamo noi, come per la dashboard
  * di BetterEta.
  */
 object Pages {
     const val COUNT = 4
-    const val MAX_ROWS = 4
+    // Due righe al massimo (Andrea, 28/09): con tre righe le cifre scendono a
+    // ~133 px, quanto i campi nativi (~130 px), e il vantaggio in dimensione
+    // sparisce. Con due righe 180 px contro 130.
+    const val MAX_ROWS = 2
 
     fun typeId(page: Int) = "page-$page"
 
@@ -20,7 +23,7 @@ object Pages {
         listOf("distance", "ascent"),               // fatto
         listOf("dist-to-dest", "climb-left"),       // da fare
         listOf("arrival", "time-to-dest"),          // ETA nativa, confronto con BetterEta
-        listOf("altitude", "grade", "temperature"), // accanto al grafico altimetrico
+        listOf("altitude", "grade"),                // accanto al grafico altimetrico
     )
 
     /** Righe valide: solo dati del catalogo, al massimo [MAX_ROWS]; vuoto = default. */
@@ -39,9 +42,9 @@ data class PageDrawing(
 
 object PageRenderer {
 
-    private val ROW = intArrayOf(R.id.row_1, R.id.row_2, R.id.row_3, R.id.row_4)
-    private val LABEL = intArrayOf(R.id.tv_label_1, R.id.tv_label_2, R.id.tv_label_3, R.id.tv_label_4)
-    private val VALUE = intArrayOf(R.id.iv_value_1, R.id.iv_value_2, R.id.iv_value_3, R.id.iv_value_4)
+    private val ROW = intArrayOf(R.id.row_1, R.id.row_2)
+    private val LABEL = intArrayOf(R.id.tv_label_1, R.id.tv_label_2)
+    private val VALUE = intArrayOf(R.id.iv_value_1, R.id.iv_value_2)
 
     /** Area delle righe e altezza delle cifre: la più bassa tra le righe, così sono tutte uguali. */
     fun drawing(frames: List<FieldFrame>, cellW: Int, cellH: Int, dims: CellDims, style: FieldStyle): PageDrawing {
@@ -69,9 +72,7 @@ object PageRenderer {
 
     private fun layoutFor(rows: Int, label: Boolean, band: Boolean): Int = when (rows.coerceIn(1, Pages.MAX_ROWS)) {
         1 -> pick(label, band, R.layout.view_big_page_1, R.layout.view_big_page_1_band, R.layout.view_big_page_1_bare, R.layout.view_big_page_1_bare_band)
-        2 -> pick(label, band, R.layout.view_big_page_2, R.layout.view_big_page_2_band, R.layout.view_big_page_2_bare, R.layout.view_big_page_2_bare_band)
-        3 -> pick(label, band, R.layout.view_big_page_3, R.layout.view_big_page_3_band, R.layout.view_big_page_3_bare, R.layout.view_big_page_3_bare_band)
-        else -> pick(label, band, R.layout.view_big_page_4, R.layout.view_big_page_4_band, R.layout.view_big_page_4_bare, R.layout.view_big_page_4_bare_band)
+        else -> pick(label, band, R.layout.view_big_page_2, R.layout.view_big_page_2_band, R.layout.view_big_page_2_bare, R.layout.view_big_page_2_bare_band)
     }
 
     private fun pick(label: Boolean, band: Boolean, plain: Int, withBand: Int, bare: Int, bareBand: Int) = when {

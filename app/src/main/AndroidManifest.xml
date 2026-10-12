@@ -9,9 +9,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
 
-        <!-- Nessun io.hammerhead.karooext.MANIFEST_URL finché il repository è
-             privato: lo store del Karoo lo scarica a ogni apertura e con un 404
-             mostra RETRY (visto su PoiAhead il 06/09). -->
+        <!-- Il Karoo scarica questo manifest per mostrare dettagli e aggiornamenti
+             dell'estensione nella sua libreria: deve esistere in ogni release
+             (app/manifest.json caricato come asset), altrimenti la libreria
+             mostra RETRY al posto dell'app. -->
+        <meta-data
+            android:name="io.hammerhead.karooext.MANIFEST_URL"
+            android:value="https://github.com/anpaiss/BigFields/releases/latest/download/manifest.json" />
 
         <activity
             android:name=".MainActivity"

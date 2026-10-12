@@ -1,0 +1,18 @@
+{
+  "label": "BigFields",
+  "packageName": "com.anpaiss.bigfields",
+  "iconUrl": "https://raw.githubusercontent.com/anpaiss/BigFields/v1.0/docs/icon.png",
+  "latestApkUrl": "https://github.com/anpaiss/BigFields/releases/latest/download/BigFields.apk",
+  "latestVersion": "1.0",
+  "latestVersionCode": 100,
+  "developer": "Andrea Paissan",
+  "description": "Karoo data fields in digits as large as the screen allows, for riders who would rather not have to wear reading glasses on the bike. Four Big Page fields fill a whole data page with one or two values in rows of equal height; 32 single fields read native Karoo values. Numbers are fitted to the real outline of the digits in a condensed font: on a Karoo 3, 180 px digits on a two-value page against 130 px for native fields. Six styles with zone colours for heart rate and power.",
+  "releaseNotes": "First stable release.",
+  "screenshotUrls": [
+    "https://raw.githubusercontent.com/anpaiss/BigFields/v1.0/docs/compare-two.png",
+    "https://raw.githubusercontent.com/anpaiss/BigFields/v1.0/docs/pages.png",
+    "https://raw.githubusercontent.com/anpaiss/BigFields/v1.0/docs/styles.png",
+    "https://raw.githubusercontent.com/anpaiss/BigFields/v1.0/docs/app.png"
+  ],
+  "tags": ["performance"]
+}

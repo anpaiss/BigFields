@@ -1,6 +1,6 @@
 # BigFields
 
-> **Beta 0.95** — install the APK from the [latest release](../../releases/latest/download/BigFields.apk).
+> **Version 1.0** — install the APK from the [latest release](../../releases/latest/download/BigFields.apk).
 
 Karoo data fields in digits as large as the screen allows. Made for riders who would rather not **have to** wear reading glasses on the bike to read their numbers at a glance.
 
@@ -55,7 +55,7 @@ Single fields on the same page also share one digit height. Units follow the Kar
 4. In the Karoo profile editor, add a data page and put **one** field on it: *Big Page 1* (or 2, 3, 4) from the BigFields extension. A Big Page must be alone on its page to get the whole screen.
 5. Or add single *Big* fields next to native ones.
 
-Changes made in the app show on the ride pages as soon as you leave it. No permission is needed. It is not on the Hammerhead app store.
+Changes made in the app show on the ride pages as soon as you leave it. No permission is needed. It is not on the Hammerhead app store. New versions install over the old one with the same command; settings are kept and there is no need to uninstall first.
 
 ## Settings
 

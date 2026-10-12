@@ -20,7 +20,7 @@ body:
     id: version
     attributes:
       label: Extension version
-      placeholder: e.g. 0.95-beta
+      placeholder: e.g. 1.0
     validations:
       required: true
   - type: textarea

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Due celle con un numero grande: una pagina a due campi. -->
+<!-- Sfondo arancio pieno come AXSRatio e AutoLoop; due righe con un numero grande: una pagina a due campi. -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="48dp"
     android:height="48dp"
@@ -7,11 +7,15 @@
     android:viewportHeight="48">
     <path
         android:fillColor="#FF5823"
-        android:pathData="M8,4h32a4,4 0,0 1,4 4v13a4,4 0,0 1,-4 4h-32a4,4 0,0 1,-4 -4v-13a4,4 0,0 1,4 -4z" />
+        android:pathData="M4,4h40v40h-40z" />
     <path
-        android:fillColor="#FF5823"
-        android:pathData="M8,27h32a4,4 0,0 1,4 4v9a4,4 0,0 1,-4 4h-32a4,4 0,0 1,-4 -4v-9a4,4 0,0 1,4 -4z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M10,23h28v2h-28z" />
     <path
-        android:fillColor="#000000"
-        android:pathData="M15,9h6v11h-3v-8h-3z M26,9h8v3h-5v2h5v6h-8v-3h5v-2h-5z" />
+        android:fillColor="#FFFFFF"
+        android:pathData="M15,8h6v11h-3v-8h-3z M26,8h8v3h-5v2h5v6h-8v-3h5v-2h-5z" />
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="evenOdd"
+        android:pathData="M15,29h8v11h-8z M17,31h4v3h-4z M17,36h4v2h-4z M26,29h8v11h-8z M28,31h4v3h-4z M28,36h4v2h-4z" />
 </vector>

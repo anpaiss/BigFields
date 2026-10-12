@@ -33,8 +33,8 @@ android {
         // Karoo 2 è Android 8.1 (27), Karoo 3 Android 12.
         minSdk        = 26
         targetSdk     = 34
-        versionCode   = 95
-        versionName   = "0.95-beta"
+        versionCode   = 100
+        versionName   = "1.0"
     }
 
     buildTypes {

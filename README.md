@@ -55,7 +55,9 @@ Single fields on the same page also share one digit height. Units follow the Kar
 4. In the Karoo profile editor, add a data page and put **one** field on it: *Big Page 1* (or 2, 3, 4) from the BigFields extension. A Big Page must be alone on its page to get the whole screen.
 5. Or add single *Big* fields next to native ones.
 
-Changes made in the app show on the ride pages as soon as you leave it. No permission is needed. It is not on the Hammerhead app store. New versions install over the old one with the same command; settings are kept and there is no need to uninstall first.
+![BigFields in the Karoo Extensions library and in the field picker of the profile editor](docs/install.png)
+
+Changes made in the app show on the ride pages as soon as you leave it. No permission is needed. It is not on the Hammerhead app store, but once installed it appears in the Karoo **Extensions** library with its description, screenshots and version, and the Karoo checks there for a newer release. New versions install over the old one with the same command; settings are kept and there is no need to uninstall first.
 
 ## Settings
 

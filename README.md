@@ -1,3 +1,6 @@
+![Total Downloads](https://img.shields.io/github/downloads/anpaiss/BigFields/total?color=blue)
+![Latest Release](https://img.shields.io/github/v/release/anpaiss/BigFields)
+
 # BigFields
 
 > **Version 1.0** — install the APK from the [latest release](../../releases/latest/download/BigFields.apk).

@@ -1,5 +1,5 @@
-![Total Downloads](https://img.shields.io/github/downloads/anpaiss/BigFields/BigFields.apk?color=blue)
-![Latest Release](https://img.shields.io/github/v/release/anpaiss/BigFields)
+![Downloads](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/anpaiss/78cf5eb76ad50594402b9778008a00a8/raw/BigFields-downloads.json)
+![Release](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/anpaiss/78cf5eb76ad50594402b9778008a00a8/raw/BigFields-release.json)
 
 # BigFields
 

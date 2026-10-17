@@ -1,4 +1,4 @@
-![Total Downloads](https://img.shields.io/github/downloads/anpaiss/BigFields/total?color=blue)
+![Total Downloads](https://img.shields.io/github/downloads/anpaiss/BigFields/BigFields.apk?color=blue)
 ![Latest Release](https://img.shields.io/github/v/release/anpaiss/BigFields)
 
 # BigFields

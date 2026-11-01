@@ -115,6 +115,10 @@ Numbers are drawn in Barlow Condensed Bold by default. On a Karoo 3 its digits a
 
 Bug reports and ideas are welcome as [issues](../../issues). Please include the Karoo model, the Karoo OS version and, if you can, the log file.
 
+## Support
+
+BigFields is free and open source, and will stay that way. If it made a ride better, you can [buy me a coffee on Ko-fi](https://ko-fi.com/anpaiss): it pays for the small things, a development board, a 3D-printed case, a few hours of testing on the trails.
+
 ## License
 
 MIT, see [LICENSE](LICENSE). The bundled Barlow Condensed font is licensed under the SIL Open Font License 1.1 ([`app/src/main/assets/OFL-BarlowCondensed.txt`](app/src/main/assets/OFL-BarlowCondensed.txt)).

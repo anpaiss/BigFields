@@ -128,3 +128,5 @@ BigFields is free and open source, and will stay that way. If it made a ride bet
 ## License
 
 MIT, see [LICENSE](LICENSE). The bundled Barlow Condensed font is licensed under the SIL Open Font License 1.1 ([`app/src/main/assets/OFL-BarlowCondensed.txt`](app/src/main/assets/OFL-BarlowCondensed.txt)).
+
+If you build on this code, or on its ideas, a mention is much appreciated: a link to this repository is enough.

@@ -115,6 +115,12 @@ Numbers are drawn in Barlow Condensed Bold by default. On a Karoo 3 its digits a
 
 Bug reports and ideas are welcome as [issues](../../issues). Please include the Karoo model, the Karoo OS version and, if you can, the log file.
 
+<!-- battery:bigfields -->
+## Battery use
+
+**0.2 % of the Karoo's battery use**, measured with Android's battery statistics (provisional, Karoo 3, 4 November 2026). How it was measured, and why the number is provisional: [the battery measurements of the extensions](https://lagorai.bike/blog/karoo-extensions-battery-use/).
+<!-- /battery:bigfields -->
+
 ## Is it safe?
 
 - The code is all here, open source.

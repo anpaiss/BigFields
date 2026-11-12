@@ -24,6 +24,12 @@ class ValuePickerTest {
         assertEquals(812.0, ValuePicker.pick(mapOf("OTHER" to 812.0), null)!!, 0.0)
     }
 
+    @Test fun `strict reading ignores the other keys`() {
+        // Way Home senza traccia: solo SINGLE = -1, nessun "allowance"
+        assertNull(ValuePicker.pick(mapOf(Field.SINGLE to -1.0), "allowance", strict = true))
+        assertEquals(-300.0, ValuePicker.pick(mapOf(Field.SINGLE to 900.0, "allowance" to -300.0), "allowance", strict = true)!!, 0.0)
+    }
+
     @Test fun `several values without the expected one give no value`() {
         assertNull(ValuePicker.pick(mapOf("A" to 1.0, "B" to 2.0), Field.SPEED))
     }

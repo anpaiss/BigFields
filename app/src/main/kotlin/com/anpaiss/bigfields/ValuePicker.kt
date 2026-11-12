@@ -55,9 +55,14 @@ object ValuePicker {
      * Il valore di [expected] se c'è; altrimenti, con un solo valore nella
      * mappa, quello; con più valori e nessuno atteso, null: meglio "--" che un
      * numero sbagliato mostrato come buono.
+     *
+     * Con [strict] conta solo [expected]: i dati delle nostre estensioni, dove la chiave
+     * assente vuol dire "nessun valore" (Way Home senza traccia pubblica solo SINGLE = -1,
+     * che letto come margine dava "0" invece di "--": giro di prova del 12/11).
      */
-    fun pick(values: Map<String, Double>, expected: String?): Double? {
-        val v = expected?.let { values[it] } ?: values.values.singleOrNull() ?: values[Field.SINGLE]
+    fun pick(values: Map<String, Double>, expected: String?, strict: Boolean = false): Double? {
+        val v = if (strict) expected?.let { values[it] }
+            else expected?.let { values[it] } ?: values.values.singleOrNull() ?: values[Field.SINGLE]
         // NaN o infinito: "--" invece di un'eccezione nei formati (review 27/09)
         return v?.takeIf { it.isFinite() }
     }

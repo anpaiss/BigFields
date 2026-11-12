@@ -58,6 +58,7 @@ object Catalog {
         Metric("be-to-go", "TYPE_EXT::better-eta::eta-remaining", "BETTER TO GO", Kind.DURATION_HM, 3480000.0, "", field = Field.SINGLE, scale = 60_000.0, negativeIsMissing = true),
         Metric("be-next-poi", "TYPE_EXT::better-eta::eta-next-poi", "NEXT POINT", Kind.ARRIVAL, 1500000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
         Metric("bosch-battery", "TYPE_EXT::bosch-data::bike_battery", "BIKE BATTERY", Kind.PERCENT, 64.0, "", field = null, scale = 1.0, negativeIsMissing = false),
+        Metric("bestie-battery", "TYPE_EXT::bosch-data::board_battery", "BESTIE BATT", Kind.PERCENT, 87.0, "", field = null, scale = 1.0, negativeIsMissing = false),
         Metric("bosch-power", "TYPE_EXT::bosch-data::bike_power", "RIDER POWER", Kind.COUNT, 180.0, "W", field = null, scale = 1.0, negativeIsMissing = false),
         Metric("range-arrival", "TYPE_EXT::bosch-range::compact", "BATT AT END", Kind.PERCENT, 23.0, "", field = null, scale = 1.0, negativeIsMissing = false),
     )

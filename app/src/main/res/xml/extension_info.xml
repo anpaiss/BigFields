@@ -303,6 +303,13 @@
         icon="@drawable/ic_big_fields" />
 
     <DataType
+        typeId="bestie-battery"
+        displayName="@string/f_bestie_battery_name"
+        description="@string/f_bestie_battery_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
         typeId="bosch-power"
         displayName="@string/f_bosch_power_name"
         description="@string/f_bosch_power_desc"

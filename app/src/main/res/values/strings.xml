@@ -85,6 +85,8 @@
     <string name="f_be_next_poi_desc">BetterETA arrival time at the next point of interest on the route</string>
     <string name="f_bosch_battery_name">Big Bike Battery</string>
     <string name="f_bosch_battery_desc">Bosch e-bike battery from BoschData</string>
+    <string name="f_bestie_battery_name">Big BEStie Battery</string>
+    <string name="f_bestie_battery_desc">Battery of the BEStie board, from BoschData</string>
     <string name="f_bosch_power_name">Big Rider Power</string>
     <string name="f_bosch_power_desc">Bosch e-bike rider power from BoschData</string>
     <string name="f_range_arrival_name">Big Battery At Finish</string>

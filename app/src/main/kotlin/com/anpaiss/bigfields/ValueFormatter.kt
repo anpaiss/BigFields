@@ -60,6 +60,7 @@ object ValueFormatter {
             Kind.DURATION_HM -> hm(v)
             Kind.ARRIVAL -> clock(nowMs + v.roundToLong(), zone)
             Kind.CLOCK -> clock(nowMs, zone)
+            Kind.MINUTES -> whole(v)
         }
         return Formatted(text, unit, template)
     }
@@ -76,6 +77,7 @@ object ValueFormatter {
         Kind.COUNT -> metric.unitLabel
         Kind.TEMPERATURE -> if (units.imperialTemperature) "°F" else "°C"
         Kind.DURATION, Kind.DURATION_HM, Kind.ARRIVAL, Kind.CLOCK -> ""
+        Kind.MINUTES -> "MIN"
     }
 
     fun templateFor(kind: Kind): String = when (kind) {
@@ -89,6 +91,7 @@ object ValueFormatter {
         Kind.DURATION -> "8:88:88"
         Kind.DURATION_HM -> "8:88"
         Kind.ARRIVAL, Kind.CLOCK -> "88:88"
+        Kind.MINUTES -> "-88"
     }
 
     /**

@@ -73,4 +73,20 @@
     <string name="f_battery_desc">Karoo battery, in large digits</string>
     <string name="f_calories_name">Big Calories</string>
     <string name="f_calories_desc">Energy burned, in large digits</string>
+    <string name="f_be_way_home_name">Big Way Home</string>
+    <string name="f_be_way_home_desc">BetterETA Way Home: minutes you can keep riding out before the way back lands after dusk</string>
+    <string name="f_be_home_at_name">Big Home At</string>
+    <string name="f_be_home_at_desc">BetterETA Way Home: arrival home if you turned back now</string>
+    <string name="f_be_arrival_name">Big Better ETA</string>
+    <string name="f_be_arrival_desc">BetterETA arrival time at the end of the route</string>
+    <string name="f_be_to_go_name">Big Better Time To Go</string>
+    <string name="f_be_to_go_desc">BetterETA time to go to the end of the route</string>
+    <string name="f_be_next_poi_name">Big Next Point ETA</string>
+    <string name="f_be_next_poi_desc">BetterETA arrival time at the next point of interest on the route</string>
+    <string name="f_bosch_battery_name">Big Bike Battery</string>
+    <string name="f_bosch_battery_desc">Bosch e-bike battery from BoschData</string>
+    <string name="f_bosch_power_name">Big Rider Power</string>
+    <string name="f_bosch_power_desc">Bosch e-bike rider power from BoschData</string>
+    <string name="f_range_arrival_name">Big Battery At Finish</string>
+    <string name="f_range_arrival_desc">boschRange: the e-bike battery expected at the end of the route</string>
 </resources>

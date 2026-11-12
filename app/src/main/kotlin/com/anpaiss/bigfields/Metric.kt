@@ -15,6 +15,7 @@ enum class Kind {
     DURATION,       // ms, h:mm:ss
     DURATION_HM,    // ms, h:mm
     ARRIVAL,        // ms che mancano all'arrivo, mostrati come ora locale h:mm
+    MINUTES,        // minuti interi con segno (Way Home di BetterETA: negativo = già tardi)
     CLOCK,          // ora locale, nessun dato Karoo
 }
 
@@ -30,6 +31,11 @@ enum class ZoneSource(val karooType: String) {
  * [unitLabel] vale solo per [Kind.COUNT]; [sample] è il valore grezzo mostrato
  * nell'anteprima dell'editor profili; [template] sostituisce la larghezza tipica
  * del [Kind] (vedi [NumberPadding]).
+ *
+ * I dati delle nostre altre estensioni (TYPE_EXT::<estensione>::<campo>): [field] è la
+ * chiave da leggere nel DataPoint (null = quella attesa del catalogo o l'unica), [scale]
+ * porta il valore nell'unità del [Kind] (es. minuti -> ms), e con [negativeIsMissing] un
+ * valore negativo è "nessun dato" (BetterETA pubblica -1 finché non ha una stima).
  */
 data class Metric(
     val typeId: String,
@@ -40,4 +46,7 @@ data class Metric(
     val unitLabel: String = "",
     val template: String? = null,
     val zone: ZoneSource? = null,
+    val field: String? = null,
+    val scale: Double = 1.0,
+    val negativeIsMissing: Boolean = false,
 )

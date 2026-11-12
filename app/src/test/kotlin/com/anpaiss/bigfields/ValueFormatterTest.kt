@@ -84,4 +84,22 @@ class ValueFormatterTest {
         val t = 14 * 3_600_000L + 7 * 60_000L
         assertEquals("14:07", fmt("clock", null, nowMs = t).text)
     }
+
+    @Test fun `way home minutes keep their sign, already late shows negative`() {
+        // raw already scaled to minutes by MetricFlows (allowance seconds / 60)
+        assertEquals(Formatted("38", "MIN", "-88"), fmt("be-way-home", 38.0))
+        assertEquals("-5", fmt("be-way-home", -5.0).text)
+        assertEquals(Formatted("--", "MIN", "-88"), fmt("be-way-home", null))
+    }
+
+    @Test fun `better eta and home at are clock times`() {
+        val tenOClock = 10 * 3_600_000L
+        assertEquals("10:58", fmt("be-arrival", 58 * 60_000.0, nowMs = tenOClock).text)
+        assertEquals("10:48", fmt("be-home-at", 48 * 60_000.0, nowMs = tenOClock).text)
+    }
+
+    @Test fun `bike battery and rider power from BoschData`() {
+        assertEquals(Formatted("64", "%", "88"), fmt("bosch-battery", 64.0))
+        assertEquals(Formatted("180", "W", "888"), fmt("bosch-power", 180.0))
+    }
 }

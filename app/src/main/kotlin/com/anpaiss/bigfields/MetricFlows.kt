@@ -78,8 +78,9 @@ private fun values(metric: Metric, hub: BigFieldsExtension): Flow<Double?> {
         lastKind = kind
     }.map { state ->
         val values = (state as? StreamState.Streaming)?.dataPoint?.values ?: return@map null
-        val expected = ValuePicker.fieldOf[metric.typeId]
+        val expected = metric.field ?: ValuePicker.fieldOf[metric.typeId]
         val v = ValuePicker.pick(values, expected)
+            ?.let { if (metric.negativeIsMissing && it < 0) null else it * metric.scale }
         // Più valori insieme: una riga di log la prima volta, per verificare il campo scelto
         if (values.size > 1 && !loggedFields) {
             loggedFields = true

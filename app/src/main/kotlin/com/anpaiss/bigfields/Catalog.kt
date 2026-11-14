@@ -66,6 +66,9 @@ object Catalog {
         Metric("rp-to-top", "TYPE_EXT::routeprofile::to-top", "TO TOP", Kind.SHORT_DISTANCE, 3700.0, "", field = null, scale = 1.0, negativeIsMissing = true),
         Metric("rp-up-to-top", "TYPE_EXT::routeprofile::up-to-top", "UP TO TOP", Kind.ELEVATION, 245.0, "", field = null, scale = 1.0, negativeIsMissing = true),
         Metric("rp-grade-to-top", "TYPE_EXT::routeprofile::grade-to-top", "TOP GRADE", Kind.GRADE, 8.0, "", field = null, scale = 1.0, negativeIsMissing = true),
+        // BetterETA: the next climb's top, seconds (its own model; never the Karoo's times), -1 = no climb ahead.
+        Metric("be-top-at", "TYPE_EXT::better-eta::eta-top-at", "AT THE TOP", Kind.ARRIVAL, 1440000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
+        Metric("be-time-to-top", "TYPE_EXT::better-eta::eta-time-to-top", "TIME TO TOP", Kind.DURATION_HM, 1440000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
     )
 
     fun byTypeId(typeId: String): Metric? = all.firstOrNull { it.typeId == typeId }

@@ -99,4 +99,8 @@
     <string name="f_rp_up_to_top_desc">RouteProfile: ascent still to do to the top of the climb</string>
     <string name="f_rp_grade_to_top_name">Big Grade To Top</string>
     <string name="f_rp_grade_to_top_desc">RouteProfile: average grade from here to the top of the climb</string>
+    <string name="f_be_top_at_name">Big At The Top</string>
+    <string name="f_be_top_at_desc">BetterETA: time of day at the top of the climb you are on, or of the next one</string>
+    <string name="f_be_time_to_top_name">Big Time To Top</string>
+    <string name="f_be_time_to_top_desc">BetterETA: how long to the top of the climb you are on, or of the next one</string>
 </resources>

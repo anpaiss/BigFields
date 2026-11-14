@@ -351,4 +351,18 @@
         graphical="true"
         icon="@drawable/ic_big_fields" />
 
+    <DataType
+        typeId="be-top-at"
+        displayName="@string/f_be_top_at_name"
+        description="@string/f_be_top_at_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="be-time-to-top"
+        displayName="@string/f_be_time_to_top_name"
+        description="@string/f_be_time_to_top_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
 </ExtensionInfo>

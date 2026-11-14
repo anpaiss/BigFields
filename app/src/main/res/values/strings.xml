@@ -91,4 +91,12 @@
     <string name="f_bosch_power_desc">Bosch e-bike rider power from BoschData</string>
     <string name="f_range_arrival_name">Big Battery At Finish</string>
     <string name="f_range_arrival_desc">boschRange: the e-bike battery expected at the end of the route</string>
+    <string name="f_rp_to_climb_name">Big To Climb</string>
+    <string name="f_rp_to_climb_desc">RouteProfile: distance to the start of the next climb</string>
+    <string name="f_rp_to_top_name">Big To The Top</string>
+    <string name="f_rp_to_top_desc">RouteProfile: distance to the top of the climb you are on, or of the next one</string>
+    <string name="f_rp_up_to_top_name">Big Up To The Top</string>
+    <string name="f_rp_up_to_top_desc">RouteProfile: ascent still to do to the top of the climb</string>
+    <string name="f_rp_grade_to_top_name">Big Grade To Top</string>
+    <string name="f_rp_grade_to_top_desc">RouteProfile: average grade from here to the top of the climb</string>
 </resources>

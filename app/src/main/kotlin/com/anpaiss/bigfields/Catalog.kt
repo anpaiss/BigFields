@@ -61,6 +61,11 @@ object Catalog {
         Metric("bestie-battery", "TYPE_EXT::bosch-data::board_battery", "BESTIE BATT", Kind.PERCENT, 87.0, "", field = null, scale = 1.0, negativeIsMissing = false),
         Metric("bosch-power", "TYPE_EXT::bosch-data::bike_power", "RIDER POWER", Kind.COUNT, 180.0, "W", field = null, scale = 1.0, negativeIsMissing = false),
         Metric("range-arrival", "TYPE_EXT::bosch-range::compact", "BATT AT END", Kind.PERCENT, 23.0, "", field = null, scale = 1.0, negativeIsMissing = false),
+        // RouteProfile (14/11/2026): the climbs ahead, metres and %, -1 = no climb ahead.
+        Metric("rp-to-climb", "TYPE_EXT::routeprofile::to-climb", "TO CLIMB", Kind.SHORT_DISTANCE, 1200.0, "", field = null, scale = 1.0, negativeIsMissing = true),
+        Metric("rp-to-top", "TYPE_EXT::routeprofile::to-top", "TO TOP", Kind.SHORT_DISTANCE, 3700.0, "", field = null, scale = 1.0, negativeIsMissing = true),
+        Metric("rp-up-to-top", "TYPE_EXT::routeprofile::up-to-top", "UP TO TOP", Kind.ELEVATION, 245.0, "", field = null, scale = 1.0, negativeIsMissing = true),
+        Metric("rp-grade-to-top", "TYPE_EXT::routeprofile::grade-to-top", "TOP GRADE", Kind.GRADE, 8.0, "", field = null, scale = 1.0, negativeIsMissing = true),
     )
 
     fun byTypeId(typeId: String): Metric? = all.firstOrNull { it.typeId == typeId }

@@ -323,4 +323,32 @@
         graphical="true"
         icon="@drawable/ic_big_fields" />
 
+    <DataType
+        typeId="rp-to-climb"
+        displayName="@string/f_rp_to_climb_name"
+        description="@string/f_rp_to_climb_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="rp-to-top"
+        displayName="@string/f_rp_to_top_name"
+        description="@string/f_rp_to_top_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="rp-up-to-top"
+        displayName="@string/f_rp_up_to_top_name"
+        description="@string/f_rp_up_to_top_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="rp-grade-to-top"
+        displayName="@string/f_rp_grade_to_top_name"
+        description="@string/f_rp_grade_to_top_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
 </ExtensionInfo>

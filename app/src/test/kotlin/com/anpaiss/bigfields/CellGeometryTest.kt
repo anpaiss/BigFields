@@ -13,6 +13,19 @@ class CellGeometryTest {
         assertEquals(false, CellGeometry.dropUnit(478, "WAY HOME  MIN"))  // full width
     }
 
+    @Test fun `caption falls back to the short title only when needed`() {
+        assertEquals("WAY HOME", CellGeometry.fittingLabel(238, "WAY HOME  MIN", "WAY HOME", null))
+        assertEquals("BIKE BATT", CellGeometry.fittingLabel(238, "BIKE BATTERY", "BIKE BATTERY", "BIKE BATT"))
+        assertEquals("BIKE BATTERY", CellGeometry.fittingLabel(478, "BIKE BATTERY", "BIKE BATTERY", "BIKE BATT"))
+        assertEquals("TO TOP  KM", CellGeometry.fittingLabel(238, "TO TOP  KM", "TO TOP", null))
+    }
+
+    @Test fun `every short caption fits a half cell`() {
+        Catalog.all.mapNotNull { it.short }.forEach { assertEquals(it, false, CellGeometry.dropUnit(238, it)) }
+        // 9 at most: "BOARD BATT" (10, wide letters) was still cut on the Karoo
+        Catalog.all.mapNotNull { it.short }.forEach { assertEquals(it, true, it.length <= 9) }
+    }
+
     @Test fun `number area subtracts padding, label and band`() {
         assertEquals(462 to 306, CellGeometry.numberArea(478, 318, dims, showLabel = false, band = false))
         assertEquals(462 to 262, CellGeometry.numberArea(478, 318, dims, showLabel = true, band = false))

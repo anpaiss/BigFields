@@ -37,7 +37,7 @@ object Catalog {
         Metric("altitude",      Type.PRESSURE_ELEVATION_CORRECTION, "ALTITUDE",     Kind.ELEVATION,       812.0),
         Metric("ascent",        Type.ELEVATION_GAIN,                "ASCENT",       Kind.ELEVATION,      1000.0),
         Metric("dist-to-dest",  Type.DISTANCE_TO_DESTINATION,       "TO DEST",      Kind.DISTANCE,     999000.0),
-        Metric("time-to-dest",  Type.TIME_TO_DESTINATION,           "TIME TO DEST", Kind.DURATION_HM, 3480000.0),
+        Metric("time-to-dest",  Type.TIME_TO_DESTINATION,           "TIME TO DEST", Kind.DURATION_HM, 3480000.0, short = "TO DEST"),
         Metric("arrival",       Type.TIME_TO_DESTINATION,           "ARRIVAL",      Kind.ARRIVAL,     3480000.0),
         Metric("climb-left",    Type.ELEVATION_REMAINING,           "CLIMB LEFT",   Kind.ELEVATION,      1000.0),
         Metric("next-turn",     Type.DISTANCE_TO_NEXT_TURN,         "NEXT TURN",    Kind.SHORT_DISTANCE,  350.0),
@@ -57,12 +57,12 @@ object Catalog {
         Metric("be-way-home", "TYPE_EXT::better-eta::eta-way-home-left", "WAY HOME", Kind.MINUTES, 38.0, "", field = Field.SINGLE, scale = 1.0 / 60.0, negativeIsMissing = false),
         Metric("be-home-at", "TYPE_EXT::better-eta::eta-way-home", "HOME AT", Kind.ARRIVAL, 2880000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
         Metric("be-arrival", "TYPE_EXT::better-eta::eta-absolute", "BETTER ETA", Kind.ARRIVAL, 3480000.0, "", field = Field.SINGLE, scale = 60_000.0, negativeIsMissing = true),
-        Metric("be-to-go", "TYPE_EXT::better-eta::eta-remaining", "BETTER TO GO", Kind.DURATION_HM, 3480000.0, "", field = Field.SINGLE, scale = 60_000.0, negativeIsMissing = true),
+        Metric("be-to-go", "TYPE_EXT::better-eta::eta-remaining", "BETTER TO GO", Kind.DURATION_HM, 3480000.0, "", field = Field.SINGLE, scale = 60_000.0, negativeIsMissing = true, short = "TO GO"),
         Metric("be-next-poi", "TYPE_EXT::better-eta::eta-next-poi", "NEXT POINT", Kind.ARRIVAL, 1500000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
-        Metric("bosch-battery", "TYPE_EXT::bosch-data::bike_battery", "BIKE BATTERY", Kind.PERCENT, 64.0, "", field = null, scale = 1.0, negativeIsMissing = false),
-        Metric("bestie-battery", "TYPE_EXT::bosch-data::board_battery", "BESTIE BATT", Kind.PERCENT, 87.0, "", field = null, scale = 1.0, negativeIsMissing = false),
-        Metric("bosch-power", "TYPE_EXT::bosch-data::bike_power", "RIDER POWER", Kind.COUNT, 180.0, "W", field = null, scale = 1.0, negativeIsMissing = false),
-        Metric("range-arrival", "TYPE_EXT::bosch-range::compact", "BATT AT END", Kind.PERCENT, 23.0, "", field = null, scale = 1.0, negativeIsMissing = false),
+        Metric("bosch-battery", "TYPE_EXT::bosch-data::bike_battery", "BIKE BATTERY", Kind.PERCENT, 64.0, "", field = null, scale = 1.0, negativeIsMissing = false, short = "BIKE BATT"),
+        Metric("bestie-battery", "TYPE_EXT::bosch-data::board_battery", "BESTIE BATT", Kind.PERCENT, 87.0, "", field = null, scale = 1.0, negativeIsMissing = false, short = "BESTIE"),
+        Metric("bosch-power", "TYPE_EXT::bosch-data::bike_power", "RIDER POWER", Kind.COUNT, 180.0, "W", field = null, scale = 1.0, negativeIsMissing = false, short = "RIDER  W"),
+        Metric("range-arrival", "TYPE_EXT::bosch-range::compact", "BATT AT END", Kind.PERCENT, 23.0, "", field = null, scale = 1.0, negativeIsMissing = false, short = "END BATT"),
         // RouteProfile (14/11/2026): the climbs ahead, metres and %, -1 = no climb ahead.
         Metric("rp-to-climb", "TYPE_EXT::routeprofile::to-climb", "TO CLIMB", Kind.SHORT_DISTANCE, 1200.0, "", field = null, scale = 1.0, negativeIsMissing = true),
         Metric("rp-to-top", "TYPE_EXT::routeprofile::to-top", "TO TOP", Kind.SHORT_DISTANCE, 3700.0, "", field = null, scale = 1.0, negativeIsMissing = true),
@@ -70,7 +70,7 @@ object Catalog {
         Metric("rp-grade-to-top", "TYPE_EXT::routeprofile::grade-to-top", "TOP GRADE", Kind.GRADE, 8.0, "", field = null, scale = 1.0, negativeIsMissing = true),
         // BetterETA: the next climb's top, seconds (its own model; never the Karoo's times), -1 = no climb ahead.
         Metric("be-top-at", "TYPE_EXT::better-eta::eta-top-at", "AT THE TOP", Kind.ARRIVAL, 1440000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
-        Metric("be-time-to-top", "TYPE_EXT::better-eta::eta-time-to-top", "TIME TO TOP", Kind.DURATION_HM, 1440000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
+        Metric("be-time-to-top", "TYPE_EXT::better-eta::eta-time-to-top", "TIME TO TOP", Kind.DURATION_HM, 1440000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true, short = "TOP IN"),
     )
 
     fun byTypeId(typeId: String): Metric? = all.firstOrNull { it.typeId == typeId }

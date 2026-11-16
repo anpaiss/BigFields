@@ -37,6 +37,16 @@ object CellGeometry {
     /** La didascalia (titolo + unità) non sta nella cella larga [cellW]: meglio il titolo da solo. */
     fun dropUnit(cellW: Int, label: String): Boolean = label.length > (cellW - 16) / LABEL_CHAR_PX
 
+    /**
+     * La didascalia che sta nella cella: [full] (titolo + unità), altrimenti [title] da solo,
+     * altrimenti [short] se c'è ("BIKE BATTERY" in una mezza cella diventa "BIKE BATT").
+     */
+    fun fittingLabel(cellW: Int, full: String, title: String, short: String?): String = when {
+        !dropUnit(cellW, full) -> full
+        !dropUnit(cellW, title) || short == null -> title
+        else -> short
+    }
+
     /** Altezza minima dell'area del numero perché la fascia per il banner abbia senso. */
     const val MIN_AREA_WITH_BAND = 60
 

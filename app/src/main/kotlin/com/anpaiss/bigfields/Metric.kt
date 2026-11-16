@@ -49,4 +49,6 @@ data class Metric(
     val field: String? = null,
     val scale: Double = 1.0,
     val negativeIsMissing: Boolean = false,
+    /** Didascalia per le celle strette, dove [label] non sta (16/11: "BIKE BAT…" in una mezza cella). */
+    val short: String? = null,
 )

@@ -5,11 +5,17 @@
 
 # BigFields
 
-> **Version 1.0** — install the APK from the [latest release](../../releases/latest/download/BigFields.apk).
+> **Version 1.1** — install the APK from the [latest release](../../releases/latest/download/BigFields.apk).
 
 Karoo data fields in digits as large as the screen allows. Made for riders who would rather not **have to** wear reading glasses on the bike to read their numbers at a glance.
 
 ![Two native fields next to a Big Page with two rows](docs/compare-two.png)
+
+## What's new in 1.1
+
+- **Fields from other extensions.** BigFields now shows in large digits the values of other Karoo extensions: the arrival times, Way Home and the next climb's top from [BetterETA](https://github.com/anpaiss/BetterETA), the bike battery, the rider power and the board's battery from [BoschData](https://github.com/anpaiss/BoschData). See [Fields from other extensions](#fields-from-other-extensions).
+- **Small cells while navigating.** With *Leave room for the navigation banner* on, a half cell used to lose its digits while a route was loaded: the band for the banner took all the room left under the caption. The band now goes only where the number keeps enough room; in a small cell the number is drawn at full size.
+- **Captions that fit.** In a half cell a caption that does not fit drops its unit ("WAY HOME" instead of "WAY HOME  MIN") or uses a short title ("BIKE BATT" instead of "BIKE BATTERY"), instead of being cut with "…".
 
 ## Why
 
@@ -52,6 +58,27 @@ Any of the 32 single fields below can be a row. A Big Page has at most two rows:
 
 Single fields on the same page also share one digit height. Units follow the Karoo user profile, metric or imperial. Distances from 100 km up are shown without a decimal, so a three-digit road ride keeps the full size.
 
+## Fields from other extensions
+
+Some Karoo extensions publish their values as numbers, so BigFields can draw them like native ones. The extension must be installed; without it, or before it has a value, the field shows "--".
+
+![A data page of Big fields from BetterETA and BoschData: time to the top, arrival at the top, the BEStie board's battery, the bike battery, arrival home and Way Home minutes](docs/other-extensions.png)
+
+| Field | From | Shows |
+|---|---|---|
+| Big Better ETA | BetterETA | arrival time at the destination |
+| Big Better Time to Go | BetterETA | time to the destination |
+| Big Next Point ETA | BetterETA | arrival time at the next point placed on the route |
+| Big At the Top | BetterETA | arrival time at the top of the next climb |
+| Big Time to Top | BetterETA | time to the top of the next climb |
+| Big Way Home | BetterETA 1.1 or later | minutes you can keep going before the way back lands after dusk |
+| Big Home At | BetterETA | arrival home if you turned back now |
+| Big Bike Battery | BoschData | the Bosch bike's battery, as the bike shows it |
+| Big BEStie Battery | BoschData | the battery of the BEStie board that links the bike |
+| Big Rider Power | BoschData | your power from the Bosch torque sensor |
+
+The picture is the Karoo profile editor's preview, with example numbers. Five more fields are ready for two extensions that are not released yet: climb distances and grade from RouteProfile, the battery at the finish from boschRange.
+
 ## Install
 
 1. Download [`BigFields.apk`](../../releases/latest/download/BigFields.apk) from the latest release.
@@ -71,7 +98,7 @@ Changes made in the app show on the ride pages as soon as you leave it. No permi
 - **Style**: the colours of every field, see below.
 - **Number font**: *Condensed (Barlow)*, the default, or the *Karoo* font.
 - **Show label and unit**: the small caption above each number. In a two-row page the numbers are limited by the width, so hiding the caption does not make them larger; it helps on pages with three or four rows.
-- **Leave room for the navigation banner**: while navigating, the Karoo draws its turn banner over the bottom of the page and does not tell extensions. With this option on, a Big Page keeps a band free at the bottom while navigation is active, and the rows share the rest equally. Without navigation the rows always fill the page.
+- **Leave room for the navigation banner**: while navigating, the Karoo draws its turn banner over the bottom of the page and does not tell extensions. With this option on, a Big Page keeps a band free at the bottom while navigation is active, and the rows share the rest equally. Without navigation the rows always fill the page. A cell too low for the band, such as a half cell, is drawn without it, so its digits keep their size.
 - **Big Pages**: one or two rows for each Big Page; *—* leaves a row out. The preview below shows the page as it will look while navigating.
 - **Diagnostic log (test)** and **Show sample values (test)**: for testing, see the technical notes.
 
@@ -109,7 +136,7 @@ Numbers are drawn in Barlow Condensed Bold by default. On a Karoo 3 its digits a
 
 - No "more or fewer fields" gesture during the ride: extensions cannot change the Karoo page layout.
 - The height of the navigation banner is an estimate (100 px) until it is measured on a ride.
-- Fields from other extensions are a planned addition, for extensions that publish their value as a number.
+- Fields from other extensions read only the main number they publish: the Karoo passes nothing else from one extension to another.
 
 ## Feedback
 
@@ -124,8 +151,8 @@ Bug reports and ideas are welcome as [issues](../../issues). Please include the 
 ## Is it safe?
 
 - The code is all here, open source.
-- `BigFields.apk` 1.0 on [VirusTotal](https://www.virustotal.com/gui/file/9c49bc72738aaf78ce38e3c0e96839a5171cc32d20b6713977091eb5095d113c): none of the 66 antivirus engines flag it.
-- Its SHA-256 is `9c49bc72738aaf78ce38e3c0e96839a5171cc32d20b6713977091eb5095d113c`; compare it with the file you downloaded (`certutil -hashfile BigFields.apk SHA256` on Windows, `sha256sum BigFields.apk` elsewhere).
+- `BigFields.apk` 1.1 on [VirusTotal](https://www.virustotal.com/gui/file/d4ecdfb590bac409f1b12240b3abf1a30782066bdfa42ceb4d7e9b3d72bcc5fb): none of the 60 antivirus engines flag it.
+- Its SHA-256 is `d4ecdfb590bac409f1b12240b3abf1a30782066bdfa42ceb4d7e9b3d72bcc5fb`; compare it with the file you downloaded (`certutil -hashfile BigFields.apk SHA256` on Windows, `sha256sum BigFields.apk` elsewhere).
 
 ## Support
 

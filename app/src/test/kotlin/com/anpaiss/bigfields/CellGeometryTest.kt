@@ -42,4 +42,15 @@ class CellGeometryTest {
         assertEquals(462 to 213, CellGeometry.pageRowArea(478, 642, d, rows = 2, showLabel = true, band = true))
         assertEquals(462 to 630, CellGeometry.pageRowArea(478, 642, d, rows = 1, showLabel = false, band = false))
     }
+
+    @Test fun `banner band only where the digits keep room`() {
+        // half cell of a ten-field page, 238x126 (16/11): 126 - 100 - 12 - 44 < 0, no band
+        assertEquals(false, CellGeometry.bandFits(126, dims, showLabel = true))
+        // a third of the page, 254 high: 254 - 100 - 12 - 44 = 98, band kept
+        assertEquals(true, CellGeometry.bandFits(254, dims, showLabel = true))
+        // without the caption 126 - 100 - 12 = 14: still too little
+        assertEquals(false, CellGeometry.bandFits(126, dims, showLabel = false))
+        // a two-row page field 318 high: (318 - 100) / 2 = 109 per row, 109 - 56 = 53 < 60
+        assertEquals(false, CellGeometry.bandFits(318, dims, showLabel = true, rows = 2))
+    }
 }

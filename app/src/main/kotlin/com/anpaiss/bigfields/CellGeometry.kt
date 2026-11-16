@@ -28,6 +28,21 @@ object CellGeometry {
     const val FILL_W = 0.96f
     const val FILL_H = 0.86f
 
+    /** Altezza minima dell'area del numero perché la fascia per il banner abbia senso. */
+    const val MIN_AREA_WITH_BAND = 60
+
+    /**
+     * La fascia per il banner sta nella cella? In una cella bassa (mezza cella
+     * da 126 px, 16/11) la fascia da 100 px lasciava 1 px alle cifre e il campo
+     * restava vuoto in navigazione: lì meglio cifre piene, anche se il banner
+     * può coprirne il fondo.
+     */
+    fun bandFits(cellH: Int, d: CellDims, showLabel: Boolean, rows: Int = 1): Boolean {
+        val n = max(rows, 1)
+        val rowH = (cellH - d.band - (n - 1) * d.rowGap) / n
+        return rowH - d.padTop - d.padBottom - (if (showLabel) d.labelRow else 0) >= MIN_AREA_WITH_BAND
+    }
+
     /** Area del numero (larghezza, altezza) in una cella [cellW]×[cellH]. */
     fun numberArea(cellW: Int, cellH: Int, d: CellDims, showLabel: Boolean, band: Boolean): Pair<Int, Int> {
         val w = cellW - 2 * d.padH

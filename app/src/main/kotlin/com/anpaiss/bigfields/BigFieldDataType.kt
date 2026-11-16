@@ -73,7 +73,9 @@ class BigFieldDataType(
             // tra i campi della pagina, così le cifre sono alte uguali ovunque.
             val dims = cellDims(context.resources)
             val (cellW, cellH) = config.viewSize
-            val drawings = frames.distinctUntilChanged().map { f ->
+            val drawings = frames.distinctUntilChanged().map { frame ->
+                // the band only where it leaves room for the digits (CellGeometry.bandFits)
+                val f = if (frame.bannerBand && !CellGeometry.bandFits(cellH, dims, frame.showLabel)) frame.copy(bannerBand = false) else frame
                 val (w, h) = CellGeometry.numberArea(cellW, cellH, dims, f.showLabel, f.bannerBand)
                 val own = NumberRenderer.maxDigitHeight(f.template, w, h, f.font)
                 if (!config.preview) hub.reportDigitHeight(viewKey, dataTypeId, own)

@@ -52,7 +52,9 @@ object Catalog {
         Metric("calories",      Type.CALORIES,                      "CALORIES",     Kind.COUNT,           512.0, "KCAL", "8888"),
         // Our other extensions (12/11/2026): what they publish as a number, read with the right key and unit.
         // BetterETA: minutes for arrival and time to go, seconds for Way Home and the next point, -1 = no estimate yet.
-        Metric("be-way-home", "TYPE_EXT::better-eta::eta-way-home", "WAY HOME", Kind.MINUTES, 38.0, "", field = "allowance", scale = 1.0 / 60.0, negativeIsMissing = false),
+        // Way Home's minutes from BetterETA's "minutes left" stream: the Karoo passes another extension only the
+        // main value of a stream, so the "allowance" key of eta-way-home never arrived (16/11/2026)
+        Metric("be-way-home", "TYPE_EXT::better-eta::eta-way-home-left", "WAY HOME", Kind.MINUTES, 38.0, "", field = Field.SINGLE, scale = 1.0 / 60.0, negativeIsMissing = false),
         Metric("be-home-at", "TYPE_EXT::better-eta::eta-way-home", "HOME AT", Kind.ARRIVAL, 2880000.0, "", field = Field.SINGLE, scale = 1000.0, negativeIsMissing = true),
         Metric("be-arrival", "TYPE_EXT::better-eta::eta-absolute", "BETTER ETA", Kind.ARRIVAL, 3480000.0, "", field = Field.SINGLE, scale = 60_000.0, negativeIsMissing = true),
         Metric("be-to-go", "TYPE_EXT::better-eta::eta-remaining", "BETTER TO GO", Kind.DURATION_HM, 3480000.0, "", field = Field.SINGLE, scale = 60_000.0, negativeIsMissing = true),

@@ -47,7 +47,11 @@ object PageRenderer {
     private val VALUE = intArrayOf(R.id.iv_value_1, R.id.iv_value_2)
 
     /** Area delle righe e altezza delle cifre: la più bassa tra le righe, così sono tutte uguali. */
-    fun drawing(frames: List<FieldFrame>, cellW: Int, cellH: Int, dims: CellDims, style: FieldStyle): PageDrawing {
+    fun drawing(allFrames: List<FieldFrame>, cellW: Int, cellH: Int, dims: CellDims, style: FieldStyle): PageDrawing {
+        val head = allFrames.first()
+        // the band only where it leaves room for the digits (CellGeometry.bandFits)
+        val frames = if (head.bannerBand && !CellGeometry.bandFits(cellH, dims, head.showLabel, allFrames.size))
+            allFrames.map { it.copy(bannerBand = false) } else allFrames
         val first = frames.first()
         val (w, h) = CellGeometry.pageRowArea(cellW, cellH, dims, frames.size, first.showLabel, first.bannerBand)
         val digitH = frames.minOf { NumberRenderer.maxDigitHeight(it.template, w, h, it.font) }.toInt().toFloat()

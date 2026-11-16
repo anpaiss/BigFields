@@ -75,7 +75,9 @@ class BigFieldDataType(
             val (cellW, cellH) = config.viewSize
             val drawings = frames.distinctUntilChanged().map { frame ->
                 // the band only where it leaves room for the digits (CellGeometry.bandFits)
-                val f = if (frame.bannerBand && !CellGeometry.bandFits(cellH, dims, frame.showLabel)) frame.copy(bannerBand = false) else frame
+                val banded = if (frame.bannerBand && !CellGeometry.bandFits(cellH, dims, frame.showLabel)) frame.copy(bannerBand = false) else frame
+                // in a narrow cell the caption without its unit when both do not fit ("WAY HOME  MIN" cut to "WAY HO…", 16/11)
+                val f = if (CellGeometry.dropUnit(cellW, banded.label)) banded.copy(label = metric.label) else banded
                 val (w, h) = CellGeometry.numberArea(cellW, cellH, dims, f.showLabel, f.bannerBand)
                 val own = NumberRenderer.maxDigitHeight(f.template, w, h, f.font)
                 if (!config.preview) hub.reportDigitHeight(viewKey, dataTypeId, own)

@@ -7,6 +7,12 @@ class CellGeometryTest {
 
     private val dims = CellDims(padH = 8, padTop = 6, padBottom = 6, labelRow = 44, band = 100)
 
+    @Test fun `caption loses its unit only in a cell too narrow for both`() {
+        assertEquals(true, CellGeometry.dropUnit(238, "WAY HOME  MIN"))   // half cell: was cut to "WAY HO…"
+        assertEquals(false, CellGeometry.dropUnit(238, "TO TOP  KM"))     // fits, as seen on the Karoo
+        assertEquals(false, CellGeometry.dropUnit(478, "WAY HOME  MIN"))  // full width
+    }
+
     @Test fun `number area subtracts padding, label and band`() {
         assertEquals(462 to 306, CellGeometry.numberArea(478, 318, dims, showLabel = false, band = false))
         assertEquals(462 to 262, CellGeometry.numberArea(478, 318, dims, showLabel = true, band = false))

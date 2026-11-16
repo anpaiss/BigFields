@@ -28,6 +28,15 @@ object CellGeometry {
     const val FILL_W = 0.96f
     const val FILL_H = 0.86f
 
+    /**
+     * Larghezza media di un carattere della didascalia, in px: "TO TOP  KM" (10 caratteri)
+     * sta appena nei 222 px utili di una mezza cella, "WAY HOME  MIN" (13) no.
+     */
+    const val LABEL_CHAR_PX = 22
+
+    /** La didascalia (titolo + unità) non sta nella cella larga [cellW]: meglio il titolo da solo. */
+    fun dropUnit(cellW: Int, label: String): Boolean = label.length > (cellW - 16) / LABEL_CHAR_PX
+
     /** Altezza minima dell'area del numero perché la fascia per il banner abbia senso. */
     const val MIN_AREA_WITH_BAND = 60
 

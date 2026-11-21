@@ -13,7 +13,7 @@ Karoo data fields in digits as large as the screen allows. Made for riders who w
 
 ## What's new in 1.1
 
-- **Fields from other extensions.** BigFields now shows in large digits the values of other Karoo extensions: the arrival times, Way Home and the next climb's top from [BetterETA](https://github.com/anpaiss/BetterETA), the bike battery, the rider power and the board's battery from [BoschData](https://github.com/anpaiss/BoschData). See [Fields from other extensions](#fields-from-other-extensions).
+- **Fields from other extensions.** BigFields now shows in large digits the values of other Karoo extensions: the arrival times, Way Home and the next climb's top from [BetterETA](https://github.com/anpaiss/BetterETA), the bike battery, the rider power and the board's battery from [BoschData](https://github.com/anpaiss/BoschData), the climb distances and grade from [RouteProfile](https://github.com/anpaiss/RouteProfile). See [Fields from other extensions](#fields-from-other-extensions).
 - **Small cells while navigating.** With *Leave room for the navigation banner* on, a half cell used to lose its digits while a route was loaded: the band for the banner took all the room left under the caption. The band now goes only where the number keeps enough room; in a small cell the number is drawn at full size.
 - **Captions that fit.** In a half cell a caption that does not fit drops its unit ("WAY HOME" instead of "WAY HOME  MIN") or uses a short title ("BIKE BATT" instead of "BIKE BATTERY"), instead of being cut with "…".
 
@@ -76,8 +76,12 @@ Some Karoo extensions publish their values as numbers, so BigFields can draw the
 | Big Bike Battery | BoschData | the Bosch bike's battery, as the bike shows it |
 | Big BEStie Battery | BoschData | the battery of the BEStie board that links the bike |
 | Big Rider Power | BoschData | your power from the Bosch torque sensor |
+| Big To Climb | RouteProfile | distance to the start of the next climb |
+| Big To The Top | RouteProfile | distance to the top of the climb you are on, or of the next one |
+| Big Up To The Top | RouteProfile | ascent still to do to the top |
+| Big Grade To Top | RouteProfile | average grade from here to the top |
 
-The picture is the Karoo profile editor's preview, with example numbers. Five more fields are ready for two extensions that are not released yet: climb distances and grade from RouteProfile, the battery at the finish from boschRange.
+The picture is the Karoo profile editor's preview, with example numbers. One more field is ready for an extension that is not released yet: the battery at the finish from boschRange.
 
 ## Install
 

@@ -50,8 +50,12 @@ object PageRenderer {
     fun drawing(allFrames: List<FieldFrame>, cellW: Int, cellH: Int, dims: CellDims, style: FieldStyle): PageDrawing {
         val head = allFrames.first()
         // the band only where it leaves room for the digits (CellGeometry.bandFits)
-        val frames = if (head.bannerBand && !CellGeometry.bandFits(cellH, dims, head.showLabel, allFrames.size))
+        val banded = if (head.bannerBand && !CellGeometry.bandFits(cellH, dims, head.showLabel, allFrames.size))
             allFrames.map { it.copy(bannerBand = false) } else allFrames
+        // the captions only where they leave room for the digits (CellGeometry.pageLabelFits)
+        val frames = if (banded.first().showLabel &&
+            !CellGeometry.pageLabelFits(cellW, cellH, dims, banded.size, banded.first().bannerBand))
+            banded.map { it.copy(showLabel = false) } else banded
         val first = frames.first()
         val (w, h) = CellGeometry.pageRowArea(cellW, cellH, dims, frames.size, first.showLabel, first.bannerBand)
         val digitH = frames.minOf { NumberRenderer.maxDigitHeight(it.template, w, h, it.font) }.toInt().toFloat()

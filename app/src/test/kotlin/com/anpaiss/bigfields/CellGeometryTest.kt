@@ -60,6 +60,9 @@ class CellGeometryTest {
         // con la fascia: 642 - 100 - 4 = 538, righe da 269
         assertEquals(462 to 213, CellGeometry.pageRowArea(478, 642, d, rows = 2, showLabel = true, band = true))
         assertEquals(462 to 630, CellGeometry.pageRowArea(478, 642, d, rows = 1, showLabel = false, band = false))
+        // the field list's preview (240x128): two captioned rows leave 6 px, so no captions there
+        assertEquals(false, CellGeometry.pageLabelFits(240, 128, d, rows = 2, band = false))
+        assertEquals(true, CellGeometry.pageLabelFits(478, 642, d, rows = 2, band = true))
     }
 
     @Test fun `banner band only where the digits keep room`() {

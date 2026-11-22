@@ -160,7 +160,7 @@ Bug reports and ideas are welcome as [issues](../../issues). Please include the 
 ## Is it safe?
 
 - The code is all here, open source.
-- `BigFields.apk` 1.1.1 on [VirusTotal](https://www.virustotal.com/gui/file/129a2cdeb9acda88f709ff00816fcb3a2a0b90c16925212fb5e02087e66fe52b).
+- `BigFields.apk` 1.1.1 on [VirusTotal](https://www.virustotal.com/gui/file/129a2cdeb9acda88f709ff00816fcb3a2a0b90c16925212fb5e02087e66fe52b): none of the 66 antivirus engines flag it.
 - Its SHA-256 is `129a2cdeb9acda88f709ff00816fcb3a2a0b90c16925212fb5e02087e66fe52b`; compare it with the file you downloaded (`certutil -hashfile BigFields.apk SHA256` on Windows, `sha256sum BigFields.apk` elsewhere).
 
 ## Support

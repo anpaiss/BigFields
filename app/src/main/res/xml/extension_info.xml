@@ -324,6 +324,20 @@
         icon="@drawable/ic_big_fields" />
 
     <DataType
+        typeId="range-margin"
+        displayName="@string/f_range_margin_name"
+        description="@string/f_range_margin_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
+        typeId="range-extra-climb"
+        displayName="@string/f_range_extra_climb_name"
+        description="@string/f_range_extra_climb_desc"
+        graphical="true"
+        icon="@drawable/ic_big_fields" />
+
+    <DataType
         typeId="rp-to-climb"
         displayName="@string/f_rp_to_climb_name"
         description="@string/f_rp_to_climb_desc"

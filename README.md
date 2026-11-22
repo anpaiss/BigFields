@@ -5,11 +5,16 @@
 
 # BigFields
 
-> **Version 1.1** — install the APK from the [latest release](../../releases/latest/download/BigFields.apk).
+> **Version 1.1.1** — install the APK from the [latest release](../../releases/latest/download/BigFields.apk).
 
 Karoo data fields in digits as large as the screen allows. Made for riders who would rather not **have to** wear reading glasses on the bike to read their numbers at a glance.
 
 ![Two native fields next to a Big Page with two rows](docs/compare-two.png)
+
+## What's new in 1.1.1
+
+- **Big Page previews like the real page.** In the Karoo's field list the preview of a Big Page showed little more than its captions; it now shows the page in small, captions and digits.
+- **Two more boschRange fields**: the battery margin at the finish and the extra climb the battery still allows (boschRange is not public yet).
 
 ## What's new in 1.1
 
@@ -81,7 +86,7 @@ Some Karoo extensions publish their values as numbers, so BigFields can draw the
 | Big Up To The Top | RouteProfile | ascent still to do to the top |
 | Big Grade To Top | RouteProfile | average grade from here to the top |
 
-The picture is the Karoo profile editor's preview, with example numbers. One more field is ready for an extension that is not released yet: the battery at the finish from boschRange.
+The picture is the Karoo profile editor's preview, with example numbers. Three more fields are ready for an extension that is not released yet, boschRange: the battery at the finish, the margin to the alert limit and the extra climb possible.
 
 ## Install
 
@@ -155,8 +160,8 @@ Bug reports and ideas are welcome as [issues](../../issues). Please include the 
 ## Is it safe?
 
 - The code is all here, open source.
-- `BigFields.apk` 1.1 on [VirusTotal](https://www.virustotal.com/gui/file/d4ecdfb590bac409f1b12240b3abf1a30782066bdfa42ceb4d7e9b3d72bcc5fb): none of the 60 antivirus engines flag it.
-- Its SHA-256 is `d4ecdfb590bac409f1b12240b3abf1a30782066bdfa42ceb4d7e9b3d72bcc5fb`; compare it with the file you downloaded (`certutil -hashfile BigFields.apk SHA256` on Windows, `sha256sum BigFields.apk` elsewhere).
+- `BigFields.apk` 1.1.1 on [VirusTotal](https://www.virustotal.com/gui/file/129a2cdeb9acda88f709ff00816fcb3a2a0b90c16925212fb5e02087e66fe52b).
+- Its SHA-256 is `129a2cdeb9acda88f709ff00816fcb3a2a0b90c16925212fb5e02087e66fe52b`; compare it with the file you downloaded (`certutil -hashfile BigFields.apk SHA256` on Windows, `sha256sum BigFields.apk` elsewhere).
 
 ## Support
 

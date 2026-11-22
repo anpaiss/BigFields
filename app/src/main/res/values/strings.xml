@@ -91,6 +91,10 @@
     <string name="f_bosch_power_desc">Bosch e-bike rider power from BoschData</string>
     <string name="f_range_arrival_name">Big Battery At Finish</string>
     <string name="f_range_arrival_desc">boschRange: the e-bike battery expected at the end of the route</string>
+    <string name="f_range_margin_name">Big Battery Margin</string>
+    <string name="f_range_margin_desc">boschRange: battery expected at the finish minus the alert limit; negative when the route does not fit</string>
+    <string name="f_range_extra_climb_name">Big Extra Climb</string>
+    <string name="f_range_extra_climb_desc">boschRange: the extra climbing the battery margin would still pay for</string>
     <string name="f_rp_to_climb_name">Big To Climb</string>
     <string name="f_rp_to_climb_desc">RouteProfile: distance to the start of the next climb</string>
     <string name="f_rp_to_top_name">Big To The Top</string>

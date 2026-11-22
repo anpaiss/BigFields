@@ -63,6 +63,8 @@ object Catalog {
         Metric("bestie-battery", "TYPE_EXT::bosch-data::board_battery", "BESTIE BATT", Kind.PERCENT, 87.0, "", field = null, scale = 1.0, negativeIsMissing = false, short = "BESTIE"),
         Metric("bosch-power", "TYPE_EXT::bosch-data::bike_power", "RIDER POWER", Kind.COUNT, 180.0, "W", field = null, scale = 1.0, negativeIsMissing = false, short = "RIDER  W"),
         Metric("range-arrival", "TYPE_EXT::bosch-range::compact", "BATT AT END", Kind.PERCENT, 23.0, "", field = null, scale = 1.0, negativeIsMissing = false, short = "END BATT"),
+        Metric("range-margin", "TYPE_EXT::bosch-range::margin", "BATT MARGIN", Kind.PERCENT, 21.0, "", template = "-88", field = null, scale = 1.0, negativeIsMissing = false, short = "MARGIN"),
+        Metric("range-extra-climb", "TYPE_EXT::bosch-range::extra_climb", "EXTRA CLIMB", Kind.ELEVATION, 420.0, "", field = null, scale = 1.0, negativeIsMissing = false, short = "EXTRA UP"),
         // RouteProfile (14/11/2026): the climbs ahead, metres and %, -1 = no climb ahead.
         Metric("rp-to-climb", "TYPE_EXT::routeprofile::to-climb", "TO CLIMB", Kind.SHORT_DISTANCE, 1200.0, "", field = null, scale = 1.0, negativeIsMissing = true),
         Metric("rp-to-top", "TYPE_EXT::routeprofile::to-top", "TO TOP", Kind.SHORT_DISTANCE, 3700.0, "", field = null, scale = 1.0, negativeIsMissing = true),

@@ -10,6 +10,10 @@
     <!-- Didascalia: 22sp = 41 px, maiuscole ~29 px (native misurate 25 px, 25/09) -->
     <dimen name="label_text">22sp</dimen>
     <dimen name="label_row">44px</dimen>
+    <!-- Didascalia piccola delle pagine in celle basse, come l'anteprima
+         dell'elenco campi (240x128): 10sp = 19 px, maiuscole ~13 px (22/11) -->
+    <dimen name="label_text_compact">10sp</dimen>
+    <dimen name="label_row_compact">20px</dimen>
 
     <!-- Fascia lasciata al banner "next cue" della navigazione. Stima da
          BetterEta, da misurare con uno screenshot in navigazione. -->

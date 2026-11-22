@@ -57,6 +57,7 @@ fun cellDims(res: Resources) = CellDims(
     padTop = res.getDimensionPixelSize(R.dimen.cell_pad_top),
     padBottom = res.getDimensionPixelSize(R.dimen.cell_pad_bottom),
     labelRow = res.getDimensionPixelSize(R.dimen.label_row),
+    labelRowCompact = res.getDimensionPixelSize(R.dimen.label_row_compact),
     band = res.getDimensionPixelSize(R.dimen.banner_band),
     rowGap = res.getDimensionPixelSize(R.dimen.row_gap),
 )

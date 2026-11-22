@@ -11,6 +11,7 @@ data class CellDims(
     val labelRow: Int,
     val band: Int,
     val rowGap: Int = 0,
+    val labelRowCompact: Int = 20,
 )
 
 /**
@@ -62,16 +63,20 @@ object CellGeometry {
         return rowH - d.padTop - d.padBottom - (if (showLabel) d.labelRow else 0) >= MIN_AREA_WITH_BAND
     }
 
-    /** Altezza minima delle cifre di una riga di pagina perché valga la pena tenere la didascalia. */
+    /** Altezza minima delle cifre di una riga di pagina sotto la didascalia normale. */
     const val MIN_AREA_WITH_LABEL = 40
 
     /**
-     * Le didascalie stanno nelle righe di un campo pagina? Nell'anteprima dell'elenco
-     * campi (240×128, 22/11) due righe con didascalia lasciavano 6 px alle cifre:
-     * lì meglio solo le cifre.
+     * La didascalia normale sta nelle righe di un campo pagina? Nell'anteprima
+     * dell'elenco campi (240×128, 22/11) due righe con didascalia lasciavano 6 px
+     * alle cifre: lì la didascalia piccola ([CellDims.labelRowCompact]), perché
+     * l'anteprima deve somigliare alla pagina vera (Andrea, 22/11).
      */
     fun pageLabelFits(cellW: Int, cellH: Int, d: CellDims, rows: Int, band: Boolean): Boolean =
         pageRowArea(cellW, cellH, d, rows, showLabel = true, band = band).second >= MIN_AREA_WITH_LABEL
+
+    /** Le stesse misure con la didascalia piccola. */
+    fun compact(d: CellDims): CellDims = d.copy(labelRow = d.labelRowCompact)
 
     /** Area del numero (larghezza, altezza) in una cella [cellW]×[cellH]. */
     fun numberArea(cellW: Int, cellH: Int, d: CellDims, showLabel: Boolean, band: Boolean): Pair<Int, Int> {

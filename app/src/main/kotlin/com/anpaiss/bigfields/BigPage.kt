@@ -38,6 +38,8 @@ data class PageDrawing(
     val h: Int,
     val digitH: Float,
     val separator: Int,
+    /** Didascalie piccole: cella bassa, come l'anteprima dell'elenco campi. */
+    val compact: Boolean = false,
 )
 
 object PageRenderer {
@@ -52,19 +54,21 @@ object PageRenderer {
         // the band only where it leaves room for the digits (CellGeometry.bandFits)
         val banded = if (head.bannerBand && !CellGeometry.bandFits(cellH, dims, head.showLabel, allFrames.size))
             allFrames.map { it.copy(bannerBand = false) } else allFrames
-        // the captions only where they leave room for the digits (CellGeometry.pageLabelFits)
-        val frames = if (banded.first().showLabel &&
-            !CellGeometry.pageLabelFits(cellW, cellH, dims, banded.size, banded.first().bannerBand))
-            banded.map { it.copy(showLabel = false) } else banded
+        // small captions where the normal ones leave the digits no room (CellGeometry.pageLabelFits)
+        val compact = banded.first().showLabel && !banded.first().bannerBand &&
+            !CellGeometry.pageLabelFits(cellW, cellH, dims, banded.size, band = false)
+        val frames = if (compact) banded.map { it.copy(bannerBand = false) } else banded
         val first = frames.first()
-        val (w, h) = CellGeometry.pageRowArea(cellW, cellH, dims, frames.size, first.showLabel, first.bannerBand)
+        val (w, h) = CellGeometry.pageRowArea(cellW, cellH, if (compact) CellGeometry.compact(dims) else dims,
+            frames.size, first.showLabel, first.bannerBand)
         val digitH = frames.minOf { NumberRenderer.maxDigitHeight(it.template, w, h, it.font) }.toInt().toFloat()
-        return PageDrawing(frames, w, h, digitH, style.separator)
+        return PageDrawing(frames, w, h, digitH, style.separator, compact)
     }
 
     fun remoteViews(packageName: String, d: PageDrawing): RemoteViews {
         val first = d.frames.first()
-        val views = RemoteViews(packageName, layoutFor(d.frames.size, first.showLabel, first.bannerBand))
+        val views = RemoteViews(packageName,
+            if (d.compact) compactLayout(d.frames.size) else layoutFor(d.frames.size, first.showLabel, first.bannerBand))
         views.setInt(R.id.root, "setBackgroundColor", d.separator)
         d.frames.forEachIndexed { i, f ->
             val c = f.colors
@@ -82,6 +86,9 @@ object PageRenderer {
         1 -> pick(label, band, R.layout.view_big_page_1, R.layout.view_big_page_1_band, R.layout.view_big_page_1_bare, R.layout.view_big_page_1_bare_band)
         else -> pick(label, band, R.layout.view_big_page_2, R.layout.view_big_page_2_band, R.layout.view_big_page_2_bare, R.layout.view_big_page_2_bare_band)
     }
+
+    private fun compactLayout(rows: Int): Int =
+        if (rows.coerceIn(1, Pages.MAX_ROWS) == 1) R.layout.view_big_page_1_compact else R.layout.view_big_page_2_compact
 
     private fun pick(label: Boolean, band: Boolean, plain: Int, withBand: Int, bare: Int, bareBand: Int) = when {
         label && band -> withBand

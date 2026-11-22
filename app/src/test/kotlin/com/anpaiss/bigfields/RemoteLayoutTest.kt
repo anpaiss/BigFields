@@ -18,7 +18,7 @@ class RemoteLayoutTest {
 
     @Test fun `field layouts use only classes RemoteViews can inflate`() {
         val layouts = File("src/main/res/layout").listFiles { f -> f.name.startsWith("view_big_") }!!
-        assertTrue(layouts.size >= 12)   // 4 campi singoli + 8 pagine (1-2 righe)
+        assertTrue(layouts.size >= 14)   // 4 campi singoli + 8 pagine (1-2 righe) + 2 pagine compatte
         for (f in layouts) {
             val tags = Regex("""<([A-Za-z.]+)[\s>/]""").findAll(f.readText())
                 .map { it.groupValues[1] }.filter { it != "?xml" }.toSet()

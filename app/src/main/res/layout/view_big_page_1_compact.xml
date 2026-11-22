@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Campo pagina con 1 riga/e e didascalie piccole: celle basse come l'anteprima dell'elenco campi (22/11). -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#000000">
+
+    <LinearLayout
+        android:id="@+id/row_1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/cell_pad_h"
+        android:paddingEnd="@dimen/cell_pad_h"
+        android:paddingTop="@dimen/cell_pad_top"
+        android:paddingBottom="@dimen/cell_pad_bottom"
+        android:background="#000000">
+
+        <TextView
+            android:id="@+id/tv_label_1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/label_row_compact"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="#9E9E9E"
+            android:textSize="@dimen/label_text_compact"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:includeFontPadding="false" />
+
+        <ImageView
+            android:id="@+id/iv_value_1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scaleType="fitCenter"
+            android:contentDescription="@null" />
+    </LinearLayout>
+
+</LinearLayout>
